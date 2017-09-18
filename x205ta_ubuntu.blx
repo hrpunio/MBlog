@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Instalowanie Ubuntu na Asus X205TA</title>
+<!-- Tags: asus,windows,microsoft,linux,inne-->
+</head><body><!-- ##Published : 2017-03-31T03:17:13CEST ##-->
+
+<div style='float : right'>
+ <a href='https://www.flickr.com/photos/tprzechlewski/33710274266/'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://c1.staticflickr.com/3/2834/33710274266_54174e3886_k.jpg'/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>Ubuntu 16.04 @ X205TA</em>
+ <br/>
+</div>
+
+<p>Popsuł się system. Nie mi tylko Jankowi, który usiłował go naprawiać
+(w jakimś serwisie).  W rezultacie serwisant odtworzył system, który wszelako
+w zasadzie nie działał (klawiatura, touchpad, dźwięk, wskaźnik baterii
+i pewnie wiele innych rzeczy nie działały)...
+</p>
+
+<p>Pisali kiedyś w Internetach, że Linuksa nie da się zainstalować,
+ale sprawdziłem czy stan rzeczy się nie zmienił. No i się zmienił,
+jest na przykład
+<a href=' https://github.com/lopaka/instructions/blob/master/ubuntu-16.04-install-asus-x205ta.md'>
+działająca wersja Ubuntu</a>, której zainstalowanie zajęło mi 30 minut.
+</p>
+<p>Wszystko działa za wyjątkiem dźwięku. Pewnie dźwięk też działa, potrzeba tylko
+pogimnastykowania się ze sterownikami. Na razie nie mam czasu...
+</p>
+<p>
+W <em>inferior-systemie</em> (czyli w Windows)
+z 32Gb dostępnej pamięci, po zainstalowaniu kilku
+aplikacji zostawało 10Gb wolnego miejsca, ponieważ 10 Gb zajęte
+było przez <em>recovery partition</em> (której nie dawało się
+usunąć/przenieść na przykład na pamięć USB bez uszkodzenia systemu--w tym Asusie tak było), podczas
+gdy w Ubuntu jest do dyspozycji całe 30 Gb,
+a po zainstalowaniu systemu zostaje aż 21 Gb (dwa razy tyle co w Windows)
+</p>
+
+<p><em>Any questions</em>?</p>
+
+<p>PS: dla pewności kopiuję procedurę instalacyjną z podanej wyżej strony</p>
+<pre>
+# Write ISO to USB
+# Assuming USB flashdrive assigned to /dev/sdb
+sgdisk --zap-all /dev/sdb
+sgdisk --new=1:0:0 --typecode=1:ef00 /dev/sdb
+mkfs.vfat -F32 /dev/sdb1
+mount -t vfat /dev/sdb1 /mnt
+7z x ubuntu-16.04.2-desktop-amd64-asus-x205ta-4.10-kernel.iso -o/mnt/
+umount /mnt
+
+# Installation on X205TA
+# BIOS setup
+# Make sure the X205TA is off &amp; plug in the USB flash drive
+# Start the X205TA and continue to press F2 to get into BIOS.
+# Under Advanced tab, USB Configuration -> USB Controller Select set to EHCI
+#   otherwise mouse and keyboard will not work
+# Under Security tab, Secure Boot menu -> Secure Boot Control set to Disabled.
+#   Otherwise, you may get a SECURE BOOT VIOLATION on boot.
+# Under Save &amp; Exit tab, Save Changes (NOT Save Chances and Exit)
+# Lastly, while still in Save &amp; Exit tab, under Boot Override,
+# select the USB flash drive.
+</pre>
+<p>PS2: WiFi działało z USB, po zainstalowaniu systemu do pamięci
+komputera (bo on nie ma dysku) przestało. Jak rozwiązać problem
+jest na przykład
+<a href='http://askubuntu.com/questions/768036/connection-to-wifi-network-with-my-asus-x205ta'>tutaj</a>.
+</p>
+  
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

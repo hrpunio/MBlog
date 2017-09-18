@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Publikowanie z bazy danych</title>
+<!-- Tags: latex,perl,sqlite,kleinertest-->
+</head><body><!-- ##Published : 2017-06-02T02:31:52CEST ##-->
+
+<p>Absolutnie minimalistyczny przykład wykorzystania LaTeXa do
+publikowania zawartości bazy danych:</p>
+
+<p>1. Dane są w bazie sqlite (można ją utworzyć/dodawać rekordy
+  w prosty sposób wykorzystując coś co się nazywa <code>sqlitebrowser</code>)
+</p>
+<p>
+W przykładzie (poniżej) plik <code>kleinertest.db3</code> zawiera
+tabelę Kursanci, z której pobierane są pola
+<code>ImieNazwisko</code>,
+<code>Plec</code> i <code>Ocena</code>.
+</p>
+<p>
+2. Do drukowania uruchamiamy skrypt w języku Perl. Skrypt jest tak
+prosty że do dopasowania go do konkretnej tabeli nie potrzeba
+znajomości Perla a wystarczy zdrowy rozsądek
+(co zmienić zaznaczono @@)
+</p>
+<p>
+Perl dla Windows do pobrania z <code>https://www.activestate.com/</code>
+</p>
+<p>
+3. Skrypt uruchamia pdflatexa i drukuje zawartość bazy do pliku pdf
+</p>
+<p>
+4. Można skomplikować skrypt, np podając argument na wejściu. Dajmy na
+to nazwisko delikwenta do wydrukowania. Żeby nie drukować wszystkiego.
+Do tego potrzeba minimalnej znajomości Perla
+</p>
+<pre>
+#!/usr/bin/perl -w
+# Potrzebne są moduły Perla DBI DBD-SQLite DBD-SQLite2
+#
+use strict;
+use utf8;
+use DBI;
+
+binmode(STDOUT, ":utf8");
+
+my $dbfileName= "kleinertest.db3"; ## @@ nazwa pliku z bazą
+my $tmpfileName = "kleinertest.tex"; ## @@ nazwa pliku .tex
+my $dbh = DBI->connect("dbi:SQLite:dbname=$dbfileName", "", "");
+
+## @@ Pobranie danych z tabeli Kursanci (pola: ImieNazwisko, Plec Ocena)
+my $sth = $dbh->prepare("SELECT
+   ImieNazwisko,
+   Plec,
+   Ocena
+   FROM Kursanci ");
+$sth ->execute();
+
+## PreAmBuła ### ### ### ### ###
+open (TEX, ">$tmpfileName");
+
+print TEX "\\documentclass{article}\\usepackage{mydbiprint}\\begin{document}\n";
+
+## MidBuła: drukowanie rekordów z bazy ## ### ### ###
+## ImieNazwisko = $r[0], Plec = $r[1], Ocena = $r[2] itd...
+while ( my @r = $sth->fetchrow_array() ) {
+     print TEX "\\Dyplom{ $r[0] }{$r[1]}{ $r[2] }\n"; ## @@ dopasować do konkretnej tabeli
+   }
+
+## PostAmBuła ## ### ### ### ###
+print TEX "\\end{document}\n";
+
+$dbh->disconnect || warn "Nie moge zamknac bazy $dbfileName\n";
+
+## TeXowanie pliku: ## ## ### ### ### ### ###
+close(TEX);
+system("pdflatex", "$tmpfileName");
+
+## koniec 
+</pre>
+
+<p>Przykładowy pakiet <code>mydbiprint.sty</code>:
+</p>
+<pre>
+%% Minimalistyczny szablon do drukowania z bazy
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{polski}
+\RequirePackage{ifthen}
+\pagestyle{empty}
+\newcommand{\Dyplom}[3]{%%
+  \begin{center}\fontsize{30}{40}\selectfont DYPLOM\end{center}
+    \ifthenelse{\equal{#2}{K}}
+               {\DyplomDlaPani{#1}{#3}}
+               {\DyplomDlaPana{#1}{#3}}
+ }
+\newcommand\DyplomDlaPani[2]{%
+   \begin{center}Pani #1\end{center}
+  Zdała egzamin z oceną #2\newpage}
+\newcommand\DyplomDlaPana[2]{\begin{center}Pan #1\end{center}
+    Zdał egzamin z oceną #2\newpage}
+\endinput 
+</pre>
+
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>O lepsze liczenie kadencji</title>
+<!-- Tags: rowery-->
+</head><body><!-- ##Published : 2017-09-06T04:22:38CEST ##-->
+
+<p>Informacja o kadencji jest w pliku .tcx
+rejestrowana (przez GarminaEdge 500) w następujący sposób:
+</p>
+<pre>
+  &lt;Activities>
+    &lt;Activity Sport="Biking">
+      &lt;Lap StartTime="2017-08-31T14:51:16Z">
+	&lt;Cadence>77&lt;/Cadence>
+	...
+	&lt;Track>
+  	  &lt;Trackpoint>
+             &lt;Time>2017-08-31T14:52:02Z&lt;/Time>
+             &lt;Cadence>0&lt;/Cadence>
+          &lt;/Trackpoint>
+	  &lt;Trackpoint>
+	     &lt;Time>2017-08-31T14:52:06Z&lt;/Time>
+	     &lt;Cadence>46&lt;/Cadence>
+	  &lt;/Trackpoint>
+	  &lt;Trackpoint>
+            &lt;Time>2017-08-31T14:52:07Z&lt;/Time>
+	    &lt;Cadence>53&lt;/Cadence>
+	  &lt;/Trackpoint>
+
+</pre>
+<p>Lap-ów może być wiele. Każdy zawiera element <code>Track</code>,
+w którym zapisana jest informacja o fragmencie trasy. Pomiędzy
+<code>Lap</code> a <code>Track</code> znajduje się nagłówek zawierający różne
+obliczone/zbiorcze informacje, m.in. średnią kadencję. Co by oznaczało, że
+w powyższym przykładzie średnia kadencja wynosiła
+77 obrotów/min. Na odcinku od 14:52:02Z do 14:52:06Z (4 sekundy) średnia kadencja wyniosła 46 o/min,
+zaś na odcinku 14:52:06Z--07Z (1s) 53 o/min.
+</p>
+
+<p>
+Można też policzyć kadencję samodzielnie, co pozwoli na uzyskanie
+dodatkowej informacji.
+Liczenie kadencji jest proste.
+Mnożąc średnią kadencję
+odcinka razy czas w sekundach otrzymamy liczbę obrotów korby na tym
+odcinku (kadencję należy podzielić przez 60 bo jest podana
+w minutach).  Odcinki o zerowej kadencji pomija się (Garmin też tak oblicza BTW).
+Dzieląc łączną liczbę obrotów przez czas otrzymamy średnią kadencję.
+Ja dodałem
+opcję pomijania odcinków o pewnej minimalnej prędkości (np. 8 kmh) --
+takie odcinki to zwykle jakieś nietypowe fragmenty, zaniżające tylko
+średnią. 
+</p>
+
+<pre>
+#!/usr/bin/perl
+# Cadence calculator for GarminEdge tcx files (or converted fits)
+# tprzechlewski@gmail.com
+use Getopt::Long;
+
+my $prev_Time = -1;
+my $parsingTrack ='N';
+my $regCadence = 'N';
+my $min_speed = -1; # minimum speed
+my $trackNo=1;
+
+GetOptions( "s=f"  => \$min_speed, );
+$min_speedMS = ($min_speed *1000)/3600.0;
+
+if ($min_speed > 0) {
+  print "*** Segments with speed below $min_speed kmh skipped ***\n";
+}
+
+while (&lt;>) {
+  chomp();
+
+  # Order is importany (first check for &lt;Track>:
+  if ( /&lt;Track>/ ) {
+    if ( $regCadence eq 'N' ) {
+      ## Check if Cadence is registered
+      print STDERR "*** No cadence registered! ***\n";
+      exit 1;
+    } else {
+      $parsingTrack = 'Y' ; print STDERR "### Parsing track #$trackNo...\n";
+      $trackNo++;
+    }
+  }
+
+  # Parsing header:
+  if ($parsingTrack eq 'N' ) {
+    if ( /&lt;TotalTimeSeconds>/) {
+      $edge_LapTime = xmlEleValue('TotalTimeSeconds', $_) ; }
+    elsif (/&lt;Cadence>/) {
+      $edge_LapCadence = xmlEleValue('Cadence', $_) ; $regCadence = 'Y' }
+    elsif (/&lt;DistanceMeters>/) {
+      $edge_LapDist = xmlEleValue('DistanceMeters', $_) ;  }
+    ##print STDERR "## Parsing track info: $_\n";
+    next;
+  }
+
+
+  ## start parsing Track now:
+  if (/Speed>/)  { $speed = xmlEleValue ('Speed', $_);
+  } elsif ($_ =~ /&lt;Time>(.*)T(.*)Z&lt;\/Time>/ ) {
+    $time = $2;
+    ($h, $m, $s )  = split /:/, $time;
+    $current_time = $h * 60 * 60  + $m * 60 + $s ;
+    ##print STDERR "$current_time\n";
+  } elsif (/&lt;Cadence>/ ) {
+    $cadence = xmlEleValue ('Cadence', $_);
+  } elsif (/&lt;DistanceMeters>/ ) { 
+    $distance = xmlEleValue ('DistanceMeters', $_);
+  } elsif ($_ =~ /&lt;\/Trackpoint>/ ) {
+
+    if ( $prevTime > 0 ) {## pomija pierwsze
+      $lastTime = $current_time ;
+      if ($cadence > 0 &amp;&amp; $speed > $min_speedMS ) {
+	$timeDiff = $current_time - $prevTime; 
+
+	$total_time_cycled += $timeDiff ;
+	$total_cycles += $cadence * $timeDiff / 60;
+
+	$prevTime = $current_time ;
+      }
+      else {
+	$timeDiff = $current_time - $prevTime; 
+
+	$total_time_idle += $timeDiff ;
+
+	$prevTime = $current_time ;
+      }
+
+    } else {
+     $prevTime = $current_time ;
+     $firstTime = $current_time ;
+  }
+
+ }
+
+if ( /&lt;\/Track>/ ) {
+   $total_Time = $total_time_idle + $total_time_cycled;
+
+   printf "Time = Idle: %d s Spinning: %d s Total: %d s\n", $total_time_idle,
+      $total_time_cycled, $total_Time;
+   printf "Time = Idle: %.2f%% Spinning: %.2f%% Total: %.2f%%\n",
+      $total_time_idle/$total_Time *100,
+      $total_time_cycled/$total_Time * 100, $total_Time/$total_Time *100;
+
+   print "Rotations (total) = $total_cycles\n";
+   print "Mean cadence (computed) = " . $total_cycles/$total_time_cycled * 60 . "\n";
+
+   $totalTimeTime = $lastTime - $firstTime;
+
+   print "Total time (last - first) = $totalTimeTime s\n";
+
+  print "Registered (header) values: lap time: $edge_LapTime "
+    . "cadence: $edge_LapCadence lap distance (m): $edge_LapDist\n";
+  
+  ## reset values ## ## ## 
+  $grand_total_time_idle += $total_time_idle; 
+  $grand_total_time_cycled  += $total_time_cycled ;
+  $grand_total_cycles += $total_cycles ;
+  $grand_total_Dist +=  $edge_LapDist;
+
+  $total_time_idle = $total_time_cycled = $total_cycles = 0 ;
+  $prev_Time = -1; 
+  $parsingTrack ='N';
+  $regCadence = 'N';
+}
+
+} ##/while
+
+## Grand Totals:
+$trackNo--;
+$grand_total_Time = $grand_total_time_idle + $grand_total_time_cycled;
+
+print "====== Totals/means for $trackNo tracks =====\n";
+printf "Time = Idle: %d s Spinning: %d s Total: %d s\n", $grand_total_time_idle,
+      $grand_total_time_cycled, $grand_total_Time;
+   printf "Time = Idle: %.2f%% Spinning: %.2f%% Total: %.2f%%\n",
+      $grand_total_time_idle/$grand_total_Time *100,
+      $grand_total_time_cycled/$grand_total_Time * 100, 
+      $grand_total_Time/$grand_total_Time *100;
+print "Rotations (total) = $grand_total_cycles\n";
+print "Mean cadence (computed) = " . $grand_total_cycles/$grand_total_time_cycled * 60 .  "\n";
+print "Total distance (registered): $grand_total_Dist (m)\n";
+
+## ### ### ### ### ###
+
+sub xmlEleValue {
+  my $en = shift; # element name
+  my $el = shift; # line
+
+  $el =~ /&lt;$en>(.*)&lt;\/$en>/;
+
+  return "$1";
+
+}
+</pre>
+
+<p>
+  Przykładowy wydruk dla pliku fit/tcx zawierającego trzy segmenty:
+</p>
+<pre>
+$ cadencecalc.pl 2017-08-31.tcx
+### Parsing track #1...
+Time = Idle: 552 s Spinning: 2082 s Total: 2634 s
+Time = Idle: 20.96% Spinning: 79.04% Total: 100.00%
+Rotations (total) = 2684.95
+Mean cadence (computed) = 77.3760806916427
+Total time (last - first) = 2634 s
+Registered (header) values: lap time: 2438.06 cadence: 77 lap distance (m): 16339.2
+### Parsing track #2...
+Time = Idle: 80 s Spinning: 652 s Total: 732 s
+Time = Idle: 10.93% Spinning: 89.07% Total: 100.00%
+Rotations (total) = 860.716666666666
+Mean cadence (computed) = 79.2070552147239
+Total time (last - first) = 3366 s
+Registered (header) values: lap time: 731.05 cadence: 79 lap distance (m): 4994.82
+### Parsing track #3...
+Time = Idle: 29 s Spinning: 105 s Total: 134 s
+Time = Idle: 21.64% Spinning: 78.36% Total: 100.00%
+Rotations (total) = 120.716666666667
+Mean cadence (computed) = 68.9809523809524
+Total time (last - first) = 3500 s
+Registered (header) values: lap time: 134.378 cadence: 69 lap distance (m): 761.78
+====== Totals/means for 3 tracks =====
+Time = Idle: 661 s Spinning: 2839 s Total: 3500 s
+Time = Idle: 18.89% Spinning: 81.11% Total: 100.00%
+Rotations (total) = 3666.38333333333
+Mean cadence (computed) = 77.4860866502289
+Total distance (registered): 22095.8 (m)
+</pre>
+<p>Podając jako minimalną prędkość 9 km/h otrzymamy:</p>
+
+<pre>
+$ cadencecalc.pl -s 9 2017-08-31.tcx
+*** Segments with speed below 9 kmh skipped ***
+### Parsing track #1...
+Time = Idle: 654 s Spinning: 1980 s Total: 2634 s
+Time = Idle: 24.83% Spinning: 75.17% Total: 100.00%
+Rotations (total) = 2582.11666666667
+Mean cadence (computed) = 78.2459595959596
+Total time (last - first) = 2634 s
+Registered (header) values: lap time: 2438.06 cadence: 77 lap distance (m): 16339.2
+### Parsing track #2...
+Time = Idle: 80 s Spinning: 652 s Total: 732 s
+Time = Idle: 10.93% Spinning: 89.07% Total: 100.00%
+Rotations (total) = 860.716666666666
+Mean cadence (computed) = 79.2070552147239
+Total time (last - first) = 3366 s
+Registered (header) values: lap time: 731.05 cadence: 79 lap distance (m): 4994.82
+### Parsing track #3...
+Time = Idle: 29 s Spinning: 105 s Total: 134 s
+Time = Idle: 21.64% Spinning: 78.36% Total: 100.00%
+Rotations (total) = 120.716666666667
+Mean cadence (computed) = 68.9809523809524
+Total time (last - first) = 3500 s
+Registered (header) values: lap time: 134.378 cadence: 69 lap distance (m): 761.78
+====== Totals/means for 3 tracks =====
+Time = Idle: 763 s Spinning: 2737 s Total: 3500 s
+Time = Idle: 21.80% Spinning: 78.20% Total: 100.00%
+Rotations (total) = 3563.55
+Mean cadence (computed) = 78.1194738765071
+Total distance (registered): 22095.8 (m)
+</pre>
+<p>Idle oznacza czas w którym nie kręcimy i/lub jedziemy poniżej prędkości minimalnej (podawany jest
+czas w sekundach i udział w całości). Rotations to liczba obrotów. Obliczone wartości wyglądają
+na prawidłowe na co wskazywałoby,
+że są bliskie wartościom liczonym przez Garmina.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

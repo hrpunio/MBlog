@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wycieczka do Suwałk 2017</title>
+<!-- Tags: inne,turystyka,suwałki-->
+</head><body><!-- ##Published : 2017-08-11T02:50:43CEST ##-->
+
+<p>Byliśmy od czwartku 3.08 do poniedziałku 7.08. Niezwykle udany wyjazd:
+pogoda super, dwa spływy (24km po Czarnej Hańczy oraz 14km po Rospudzie),
+i zwiedzanie okolicy. Ja do tego jeździłem codziennie
+na rowerze zaliczając następujące trasy:
+Elbląg--Górowo Iławieckie (przez Pasłęk/Pieniężno),
+Suwałki--Sejny,
+Suwałki--Buda Ruska,
+Suwałki--Hańcza (wokół jeziora Hańcza),
+Suwałki--Buda Ruska raz jeszcze. Razem rowerowania wyszło około
+95 + 50 + 50 + 80 + 40 = 320 km czyli <em>Not bad</em>.
+Do tego spotkanie z przyjaciółmi jeszcze ze studiów,
+u których się zatrzymaliśmy zresztą. Teraz mam trochę zdjęć i filmów,
+które wymagają obróbki. Zdjęcia były robione albo smarfonem
+z włączonym trybem lokalizacji (czyli w trybie dopisywania współrzędnych
+geograficznych) albo aparatem bez GPSa. W tym drugim przypadku współrzędne
+dodaję w ,,standardowy'' sposób:
+synchronizuję ze śladem GPX (z Garmina
+Legenda, który robił za loggera na wycieczkach.)</p>
+
+<p>Oczywiście nie ma tak, że wszystko poszło od pierwszego strzału.
+W szczególności smartfon to jeszcze nie opanowana do końca technologia:-)
+(Mam go od jesieni ub.r.)
+</p>
+<p>Problem #1: jak skopiować zdjęcia na PC?</p>
+
+<h4>Kopiowanie zdjęć na kartę. Smartfon Redmi Note3.</h4>
+
+<p>
+W Fedorze21/Xfce (w Gnome działa) nie działa łącze Android-PC
+(<code>simple-mtpfs</code>). Należy:
+</p>
+<pre>
+vi /etc/udev/rules.d/10-phone.rules
+# wpisać:
+SUBSYSTEM=="usb", ATTR{idVendor}=="2717", ATTR{idProduct}=="ff40",\
+SYMLINK="redminote"
+
+# Make sure to replace the ATTR{idVendor} and ATTR{idProduct} values
+# with the one you got from the dmesg | tail command, and the SYMLINK
+# value with whatever you want - it will be the name of the symbolic
+# link udev will create in your /dev folder, pointing to your device.
+# http://nknu.net/mount-nexus5-on-fedora23-using-simple-mtpfs/
+
+# reload udev rules (as root):
+udevadm control --reload-rules
+
+mkdir /tmp/redminote
+simple-mtpfs /dev/redminote /tmp/redminote
+# odmontowanie BTW:
+# fusermount -u /tmp/redminote
+</pre>
+
+<p>
+Kopiowanie plików ze zdjęciami na kartę
+mikro SDHC w RedmiNote
+nie jest oczywiste.
+Znalazłem taki oto sposób: Explorer&#x2192;Obrazy (albo Gallery),
+przesuwam do ostatniego obrazu. (Jeżeli wybiorę wcześniejsze zdjęcie,
+to nie ma gwarancji, że skopiuje się
+wszystko--opcja `zaznacz wszystko' jakoś tak kulawo działa.)
+Naciskam i przytrzymuję (w ten sposób zaznaczam).
+Po zaznaczeniu pojawia się `zaznacz wszystko', które
+wybieram. Na dole pojawia się wtedy menu, z którego
+wybieram pozycję `Więcej', a następnie `Kopiuj'.
+</p>
+
+<p>
+Po skopiowaniu na kartę
+usunąłem zdjęcia z pamięci aparatu: Gallery&#x2192;Delete
+(po zaznaczeniu zdjęć do usunięcia lub wybraniu `zaznacz wszystko')
+</p>
+
+<p>Problem #2: dokładność współrzędnych w zdjęciach ze smatfona.</p>
+
+<h4>Dokładność pomiaru GPSa</h4>
+
+<p>
+Zauważyłem przypadkowo, że czasami dokładność wstawianych współrzędnych jest
+kiepska, ale nie wiem co jest tego przyczyną. Przypuszczam jedynie, że jeżeli
+urządzenie nie potrafi ustalić pozycji za pomocą odbiornika GPS,
+to używa jakiś grubych przybliżeń. Ciekawe zatem jakie informacje
+oprócz długości/szerokości
+geograficznej są zapisywane w pliku JPG (może jest
+informacje na temat dokładności?):
+</p>
+<pre>
+## wszystkie tagi EXIF dotyczące GPSa (mogą być inne oprócz EXIF):
+exiftool -gps:all IMG_20170803_120608.jpg
+
+## albo
+exiftool -All IMG_20170803_120608.jpg | grep -i GPS
+</pre>
+
+<p>Wypisuje różne rzeczy ale nic na temat dokładności.</p>
+<p>Wynik jest zatem niekonkluzywny z punktu widzenia problemu.</p>
+
+<p>BTW: Ustalanie współrzędnych GPS może być ustawione na trzy sposoby:
+wysoka dokładność
+(GPS + WiFi/sieci komórkowe), tylko GPS, tylko WiFi/sieci komórkowe.
+Ja mam ustawiony na wysoką dokładność. Być może ustawienie na `tylko GPS'
+da w rezultacie taki efekt,
+że albo zdjęcia będą tagowane w miarę dokładnie albo wcale?
+Jeszcze tego nie sprawdzałem.
+</p>
+
+<h4>Różne rzeczy</h4>
+
+<p>Przy okazji testowania potrzebowałem utworzyć
+plik GPX zawierający współrzędne punktów--zdjęć wykonanych w jednym miejscu.
+Taki plik łatwo utworzyć korzystając z exiftool-a:
+</p>
+
+<pre>
+## wypisanie współrzędnych w formacie decymalnym
+exiftool -n -T -gpslatitude -gpslongitude  IMG_20170805_135232.jpg
+54.0761200833333	23.0741937777778
+
+## wypisanie współrzędnych dla wszystkich plików:
+## opcja -T pomija nazwę pliku
+exiftool -n -gpslatitude -gpslongitude  IMG_20170805_135232.jpg
+
+## albo
+for i in *.jpg ; do
+echo $i `exiftool -n -T -gpslatitude -gpslongitude $i` ; done
+## albo od razu minimalistyczny plik GPX:
+echo '&lt;?xml version="1.0" encoding="UTF-8"?>' > PLIK.gpx
+echo '&lt;gpx version="1.0" xmlns="http://www.topografix.com/GPX/1/0">' >> PLIK.gpx
+
+for i in *.jpg ; do
+echo $i `exiftool -n -T -gpslatitude -gpslongitude $i`| \
+awk '{print "&lt;wpt lat=\"" $2 "\" lon=\"" $3 "\">&lt;name>" \
+$1 "&lt;/name>&lt;/wpt>"  }' > PLIK.gpx; done
+
+echo '&lt;/gpx>' >> PLIK.gpx
+
+# Jeżeli nie zależy nam na formacie GPX
+#http://u88.n24.queensu.ca/exiftool/forum/index.php?topic=3075.0
+exiftool -n -filename -gpslatitude -gpslongitude -T DIR > out.txt
+</pre>
+
+<p>Tu jest na przykład
+<a href='http://pinkaccordions.homelinux.org/staff/tp/Geo/trasa.php?trasa=20170811_07_W'>plik z informacją</a> o współrzędnych ze zdjęć
+wykonanych w restauracji
+,,Gospoda pod Sieją'' w Starym Folwarku. Jedno ze zdjęć (pierwsze tam wykonane)
+ma beznadziejnie duży błąd lokalizacji.
+Podobnie <a href='http://pinkaccordions.homelinux.org/staff/tp/Geo/trasa.php?trasa=rospuda_2017'>na zdjęciach wykonanych
+na spływie Rospudą</a> jest kilka ze znaczącym błędem.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Stacja pogodowa WS1080</title>
+<!-- Tags: inne,linux,python,ws1080-->
+</head><body><!-- ##Published : 2017-06-12T02:11:11CEST ##-->
+
+<p>Zakupiłem używaną (z przeznaczeniem do rejestrowania parametrów
+pogody
+w innym miejscu BTW -- nie żebym chciał używać dwie różne stacje na raz w tym
+samym miejscu). Ponieważ akurat pod ręką był
+<a href='https://getchip.com/'>c.h.i.p</a> (aka <em>the world's
+first 9USD computer</em>), podłączyłem na razie
+stację do chipa.
+</p>
+
+<pre>
+chip@chip:~/Crontab$ lsusb 
+Bus 002 Device 003: ID 1941:8021 Dream Link WH1080 \
+ Weather Station / USB Missile Launcher
+
+root@chip:~# apt-get update 
+root@chip:~# apt-get install python-pip
+root@chip:~# pip install pywws
+...
+Successfully installed pywws tzlocal pytz
+Cleaning up...
+root@chip:~# pywws-hourly -v /home/chip/Logs/weather\
+  >> /home/chip/Logs/weather/Hourly.log
+cat /home/chip/Logs/weather/Hourly.log
+Unknown weather station type. Please edit weather.ini
+and set 'ws type' to '1080' or '3080', as appropriate.
+Your station is probably a '1080' type.
+
+# wpisać 1080 w weather.ini
+# zmienić wpis dotyczący /tmp/weather w weather.ini
+
+root@chip:~/Crontab#  pywws-hourly -v /home/chip/Logs/weather\
+ >> /home/chip/Logs/weather/Hourly.log
+03:07:00:pywws.Logger:pywws version 16.12.0, build 1367 (e917ba9)
+03:07:00:pywws.Logger:Python version 2.7.9 (default, Mar  1 2015, 13:48:22) 
+[GCC 4.9.2]
+03:07:00:pywws.WeatherStation.CUSBDrive:using pywws.device_libusb1
+03:07:02:pywws.DataLogger:Synchronising to weather station
+03:09:00:pywws.weather_station:live_data missed
+03:09:44:pywws.DataLogger:Fetching data
+03:09:45:pywws.Process:Generating summary data
+03:09:45:pywws.Calib:Using default calibration
+</pre>
+<p>
+I działa...
+</p>
+
+</body></html>

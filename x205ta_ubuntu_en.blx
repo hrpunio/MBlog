@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Installing Ubuntu in Asus X205TA</title>
+<!-- Tags: asus,windows,microsoft,linux,english-->
+</head><body><!-- ##Published : 2017-03-31T03:17:13CEST ##-->
+
+<div style='float : right'>
+ <a href='https://www.flickr.com/photos/tprzechlewski/33710274266/'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://c1.staticflickr.com/3/2834/33710274266_54174e3886_k.jpg'/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>Ubuntu 16.04 @ X205TA</em>
+ <br/>
+</div>
+
+<p>MS Windows broke down making the box unusable (no keybord/mouse/WiFi etc...)
+and as Google says it is not easy to recover the system on this particular machine
+I try Ubuntu, which was installed within 30 minutes (including 20 minutes for copying the files)</p>
+<p>Sound is not working, but I suppose it is just a problem of installing proper drivers.
+After intalling the system 21Gb of 30Gb memory
+is free, while it was only 10Gb left on Windows (due to 10Gb non-removable
+recovery partition).
+</p>
+<p>Still any doubts which system is better?</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "english"
+End:
+-->

@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Czytelnictwo prasy</title>
+<!-- Tags: statystyka,statistics,inne,r-->
+</head><body><!-- ##Published : 2017-09-11T16:24:40CEST ##-->
+
+<p>Punktem wyjścia są dane ze strony <a href='https://www.zkdp.pl/'>ZKDP</a>
+(w formacie Excel.) Ponieważ pobieram je od pewnego czasu
+mam tego więcej niż jest na ww. stronie bo od stycznia 2015 do lipca 2017,
+czyli 31 plików. Ręczna 
+konwersja byłaby zatem ciut za bardzo czasochłonna. </p>
+<pre>
+  for i in *.xls do
+    oocalc --headless --convert-to csv $i ;
+    # albo ssconvert -v $i `basename $i .xls`.csv ;
+    done
+  # Wyciągam dane dotyczące sprzedaży ogółem dla SE
+  grep 'Super Ex' *.csv | awk -F ',' '{print $7} ' > se_sales.csv
+  # Analogicznie dla innych tytułów
+</pre>
+
+<p>
+Uwaga: program <code>ssconvert</code> znajduje się
+w pakiecie <code>gnumeric</code>,
+<code>oocalc</code> to oczywiście składni Libre/OpenOffice.
+</p>
+
+<p>Wielkości sprzedaży dla trzech najpoczytniejszych tytułów
+pokazują wykresy liniowe (pierwszy w tys egz.
+a drugi w procentach nakładu ze stycznia 2015 r.)
+</p>
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/sales_2015-17-0.jpg'>
+ <img width='240px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/sales_2015-17-0.jpg'/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>Sprzedaż w tys egz.</em>
+ <br/>
+  <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/sales_2015-17-1.jpg'>
+ <img width='240px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/sales_2015-17-1.jpg'/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>Sprzedaż w % poziomu ze stycznia 2015</em>
+ <br/>
+
+</div>
+
+<pre>
+library(ggplot2)
+library(reshape2)
+
+df &lt;- read.csv("newspaper_sales_2015-17.csv", sep = ';',
+               header=T, na.string="NA");
+
+meltdf &lt;- melt(df,id="month")
+
+ggplot(meltdf,aes(x=month, y=value, colour=variable, group=variable)) +
+  geom_line() +
+  ylab(label="sales [ths]") +
+  theme(legend.title=element_blank()) +
+  scale_x_discrete (breaks=c("2015-01-01", "2015-06-01",
+     "2016-01-01", "2016-06-01", "2017-01-01",  "2017-06-01"),
+  labels=c("2015-01", "2015-06", "2016-01", "2016-06",
+     "2017-01", "2017-06")  )
+
+# https://stackoverflow.com/questions/10085806/extracting-specific-columns-from-a-data-frame
+obs &lt;- df[,c("month")]
+
+normalize &lt;- function(x) { return (x /x[1] * 100 )  }
+dfN &lt;- as.data.frame(lapply(df[-1], normalize))
+
+# https://stackoverflow.com/questions/10150579/adding-a-column-to-a-data-frame
+dfN["month"] &lt;- obs
+
+str(dfN)
+
+meltdf &lt;- melt(dfN,id="month")
+
+# https://www.r-bloggers.com/what-is-a-linear-trend-by-the-way/
+pN &lt;- ggplot(meltdf,
+ aes(x=month, y=value, colour=variable, group=variable)) + geom_line() +
+ ylab(label="sales [ths]") +
+ theme(legend.title=element_blank()) +
+ stat_smooth(method = "lm", se=F) +
+  scale_x_discrete (breaks=c("2015-01-01", "2015-06-01",
+     "2016-01-01", "2016-06-01", "2017-01-01",  "2017-06-01"),
+  labels=c("2015-01", "2015-06", "2016-01",
+  "2016-06", "2017-01", "2017-06")  )
+
+  pN
+</pre>
+
+<p>Spadek widoczny na wykresach można określić
+liczbowo
+na przykład szacując linię trendu:
+</p>
+
+<pre>
+# Trend liniowy
+# http://t-redactyl.io/blog/2016/05/creating-plots-in-r-using-ggplot2-part-11-linear-regression-plots.html
+
+# http://r-statistics.co/Time-Series-Analysis-With-R.html
+seq = c (1:nrow(dfN))
+dfN["trend"] &lt;- seq
+
+trendL.gw &lt;- lm(data=dfN, gw ~ trend )
+trendL.fakt &lt;- lm(data=dfN, fakt ~ trend )
+trendL.se &lt;- lm(data=dfN, se ~ trend )
+
+trendL.gw
+trendL.fakt
+trendL.se
+</pre>
+<p>Współczynniki trendu dla GW, Faktu i SE są odpowiednio równe
+-1.114 -0.6415 -0.4301, co należy interpretować następująco:
+przeciętnie z miesiąca na miesiąc nakład spada
+o 1,11%, 0,64% oraz 0,43% nakładu ze stycznia 2015 r.,
+odpowiednio dla GW, Faktu i SuperExpresu.
+</p>
+
+<p>Dane i wyniki
+są <a href='https://github.com/hrpunio/Data/tree/master/ZKDP'>tutaj</a></p>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->
