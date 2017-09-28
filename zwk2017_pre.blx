@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Przed Żuławy w Koło 2017</title>
+<!-- Tags: inne,rowery,gpx,r-->
+</head><body><!-- ##Published : 2017-09-23T14:10:26CEST ##-->
+
+<p>Jutro planuję przejechać 140km biorąc udział
+w imprezie pn. <a href='http://zulawywkolo.pl/'>Żuławy wKoło 2017</a>.
+Niby Żuławy a profil trasy sugeruje jakieś istotne wzniesienie
+w okolicach 25--40km:</p>
+
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_140_profile.jpg'>
+ <img width='90%' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_140_profile.jpg'/>
+ </a>
+</div>
+
+<p>Uważnie przyjrzenie się liczbom (zwłaszcza na osi OY)
+pozwala stwierdzić, że jest to złudzenie, wynikające z różnicy
+w jednostkach miary obu osi (kilometry vs metry).
+W rzeczywistości
+góra tam jest symboliczna o czym można się przekonać robiąc
+wykres nachyleń. Żeby pozbyć się przypadkowych błędów związanych
+z niedokładnością pomiaru oryginalne 673 punktowe dane zostały
+zmienione na 111 punktowe (uśrednienie minimum 1 km)
+lub 62 punktowe (uśrednienie minimum 2 km).
+</p>
+
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_1km_slope.jpg'>
+ <img width='90%' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_1km_slope.jpg'/>
+ </a>
+</div>
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_2km_slope.jpg'>
+ <img width='90%' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_2km_slope.jpg'/>
+ </a>
+</div>
+
+<p><em>Przy czym uśrednienie minimum $x$</em> oznacza obliczenie nachylenia
+dla najkrótszego odcinka kolejnych $n$ punktów z oryginalnego śladu GPX,
+który będzie dłuższy niż $x$.
+</p>
+
+<p>Skrypty R/dane są <a href='https://github.com/hrpunio/MBlog/tree/master/R'>tutaj</a>.
+Oryginale ślady GPX/TCX skopiowane ze strony ŻwK
+są <a href='https://github.com/hrpunio/MBlog/tree/master/misc'>tutaj</a>.
+
+</p>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

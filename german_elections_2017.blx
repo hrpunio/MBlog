@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Chancellor Merkel victory for a visual person </title>
+<!-- Tags: r,politics,english-->
+</head><body><!-- ##Published : 2017-09-25T01:05:30CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/German_Elections_2017.jpg'>
+ <img width='240px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/German_Elections_2017.jpg'/>
+ </a>
+</div>
+
+<p>Change in number of seats won by party
+(AfD is brown of course regardless official party colors :-):-)</p>
+<pre>
+library(ggplot2)
+
+df &lt;- read.csv("de.csv", sep = ';', header=T, na.string="NA");
+
+ggplot(df, aes(x=party, y=diff, fill=party )) +
+geom_bar(stat="identity") +
+geom_text(aes(label=diff), vjust=-0.5) +
+labs(x = "", y="change") +
+
+ggtitle("German elections results (#MP change)") +
+
+## AfD is brown regardless official party colors :-)
+scale_fill_manual(values=c("#8B4513", "#56B4E9",
+"yellow", "green", "red", "#ff6666") )
+</pre>
+<!-- ąęĘŚĆ -->
+<p/>
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "english"
+End:
+-->

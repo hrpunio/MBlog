@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Współrzędne geograficzne zarejestrowane kamerą Contour+</title>
+<!-- Tags: nmea,gpx,inne,perl,contour-->
+</head><body><!-- ##Published : 2017-09-26T04:17:21CEST ##-->
+
+<p>Contour+ ma GPSa i rejestruje współrzędne geograficzne, tyle że
+do niedawna nie bardzo wiedziałem jak (słusznie podejrzewałem
+że w postaci napisów aka <em>subtitles</em>). Wreszcie rozkminiłem jak to działa,
+a zmobilizowały mnie
+filmy zarejestrowane podczas imprezy Żuławy wKoło 2017.
+</p>
+<p>
+Najpierw trzeba ustalić co jest w środku pliku <code>.mov</code>:
+</p>
+
+<pre>
+ffmpeg -i FILE0037.MOV
+## ## ##  
+Stream #0:2(eng): Subtitle: mov_text (text / 0x74786574), 1 kb/s (default)
+</pre>
+
+<p>Teraz można wyciągnąć napis
+znajdujący się w strumieniu (stream) 2:
+</p>
+
+<pre>
+ffmpeg -i FILE0037.MOV -vn -an -codec:s:0.2 srt file0037_2.srt
+</pre>
+
+<p>
+W pliku <code>file0037_2.srt</code> jest coś takiego:
+</p>
+
+<pre>
+692
+00:11:31,000 --> 00:11:32,000
+$GPRMC,061159.00,V,,,,,,,240917,,,N*7E
+$GPGGA,061159.00,,,,,0,04,2.18,,,,,,*53
+
+693
+00:11:32,000 --> 00:11:33,000
+$GPRMC,061200.00,A,5412.74161,N,01906.66188,E,18.465,202.51,240917,,,A*50
+$GPGGA,061200.00,5412.74161,N,01906.66188,E,1,04,2.18,6.5,M,32.4,M,,*58
+</pre>
+
+<p>Czyli jest to
+zwykły plik napisów w formacie <a href='https://pl.wikipedia.org/wiki/SRT'>SRT</a>,
+tj. sekwencja <em>rekordów</em> składających się z wierszy tekstu.
+Pierwszy wiersz zawiera numeru napisu (692 na przykład). Drugi
+wiersz określa czas wyświetlania napisu (początek --> koniec). Kolejne wiersze to tekst napisu.
+W przykładzie powyżej napis 692 jeszcze nie <em>złapał fiksa</em>,
+a napis 693 już tak. Współrzędne
+są zarejestrowane w postaci par zdań (<em>sentences</em>) GPRMC/GPGGA 
+w standardzie NMEA.
+Do konwersji czegoś takiego na format GPX na przykład można zastosować gpsbabela
+</p>
+
+<pre>
+gpsbabel -i nmea -f file.srt -o GPX -F file.gpx
+</pre>
+
+<p>
+Ale wtedy gubi się informację z pierwszych dwóch wierszy rekordu,
+a jest ona niezbędna do synchronizacji obrazu ze współrzędnymi
+w programach nie potrafiących wykorzystać napisów wbudowanych.
+Chciał-nie-chciał musiałem rozpoznać <a href='http://aprs.gids.nl/nmea/'>NMEA</a>
+i dokonać konwersji po swojemu:
+</p>
+
+<pre>
+$GPRMC,time,###,dd.mm,N/S,dd.mm,E/W,speed,###,date,###,###,###
+$GPGGA,time,dd.mm,N/S,dd.mm,E/W,q,s,###,ele,M,###,M,###,### 
+</pre>
+
+<p>Gdzie: <code>speed</code> -- prędkość w węzłach czyli milach/godzinę;
+<code>date</code> -- data w formacie ddmmyy;
+<code>time</code> -- czas w formacie <code>hhmmss.ss</code>;
+<code>dd.mm</code> -- współrzędne geograficzne w formacie <em>stopnieminuty.minuty</em>
+tj <code>5412.74161</code> oznacza 54 stopnie 12.74161 minut
+a <code>01906.66188</code> oznacza 19 stopni 6.66188 minut
+(uwaga: szerokość/długość ma różną liczbę cyfr przed kropką dziesiętną);
+<code>N/S/E/W</code> -- kierunki geograficzne (<em>north</em>, <em>south</em> itp);
+<code>q</code> -- jakość sygnału (niezerowa wartość jest OK);
+<code>s</code> -- liczba satelitów;
+<code>ele</code> -- wysokość npm. (w metrach na szczęście w przypadku Contoura+).
+Zawartość pól oznaczona jako <code>###</code> nas nie interesuje.
+Symbol <code>M</code> oznacza jednostkę miary (metry), z czego
+by wynikało, że różne odbiorniki GPS mogą zapisywać informacje o wysokości
+z wykorzystaniem
+innych jednostek miary.
+</p>
+
+<p>Teraz banalny skrypt Perlowy zamienia SRT na format GPX dodając informacje
+o numerze napisu
+i czasie wyświetlania w postaci stosownego elementu <code>cmt</code>
+</p>
+
+<pre>
+  &lt;trkpt lat="54.212360" lon="19.111031">
+    &lt;ele>6.500000&lt;/ele>
+    &lt;time>2017-09-24T06:12:00Z&lt;/time>
+    &lt;speed>9.499208&lt;/speed>
+    &lt;cmt>693 00:11:32,000 --> 00:11:33,000&lt;/cmt>
+  &lt;/trkpt>
+</pre>
+<p>BTW nie ma elementu <code>speed</code> w specyfikacji schematu GPX,
+ale na przykład gpsbabel
+taki element wstawia i jakoś to działa. Sprawa wymaga zbadania.
+</p>
+
+<p>Skrypt pn. <code>cc2gpx.pl</code> do konwersji SRT&#x2192;GPX jest
+<a href='https://github.com/hrpunio/Varia'>tutaj</a>.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->
