@@ -115,7 +115,7 @@ obwod;teryt;adres;coord;coordP
 100113;181602;Świetlica w Błażowej Górnej|Błażowa Górna| 204 |36-030 Błażowa;49.8856487 22.1027541;[ZERO_RESULTS] 
 100114;181602;Szkoła Podstawowa w Nowym Borku|Nowy Borek| 331 |36-030 Błażowa;49.8856487 22.1027541;[ZERO_RESULTS] 
 100115;181602;Szkoła Podstawowa w Błażowej Dolnej|Błażowa Dolna| 196 |36-030 Błażowa;49.8856487 22.1027541;49.905833 22.378056
-100116;181602;Szkoła Podstawowa w Piątkowej|Piątkowa| 429 |36-030 Błażowa;49.8856487 22.1027541;52.4539957 16.849456
+100116;181602;Szkoła Podstawowa w Piątkowej|Piątkowa 429 |36-030 Błażowa;49.8856487 22.1027541;49.8856487 22.1027541
 100117;181602;Szkoła Podstawowa w Futomie|Futoma| 168 |36-030 Błażowa;49.8856487 22.1027541;[ZERO_RESULTS] 
 100118;181602;Szkoła Podstawowa w Kąkolówce|Kąkolówka| 468 |36-030 Błażowa;49.8856487 22.1027541;49.8530996 22.0682607
 100119;181602;Szkoła Podstawowa w Białce|Białka| 175 |36-030 Błażowa;49.8856487 22.1027541;49.8699779 22.039941
@@ -1116,8 +1116,8 @@ obwod;teryt;adres;coord;coordP
 101114;200706;Zespół Szkół w Przytułach|Przytuły|ul. Lipowa 28 |18-423 Przytuły;53.3688892 22.3236072;53.367767 22.310325
 101115;200706;Szkoła Podstawowa w Wagach|Wagi| 16 |18-423 Przytuły;53.3688892 22.3236072;53.350395 22.3785779
 101116;200706;Świetlica Wiejska w Przytułach|Przytuły|ul. Lipowa 1 |18-423 Przytuły;53.3688892 22.3236072;53.3679238 22.274588
-101117;200707;Szkoła Podstawowa w Szczepankowie|Szczepankowo| 20 |18-411 Śniadowo;53.0382065 21.9907814;52.4084099 16.985105
-101118;200707;Szkoła Podstawowa w Szczepankowie|Szczepankowo| 20 |18-411 Śniadowo;53.0382065 21.9907814;52.4084099 16.985105
+101117;200707;Szkoła Podstawowa w Szczepankowie|Szczepankowo 20 |18-411 Śniadowo;53.0382065 21.9907814;53.0382065 21.9907814
+101118;200707;Szkoła Podstawowa w Szczepankowie|Szczepankowo 20 |18-411 Śniadowo;53.0382065 21.9907814;53.0382065 21.9907814
 101119;200707;Szkoła Podstawowa w Śniadowie|Śniadowo|ul. Łomżyńska 29 |18-411 Śniadowo;53.0382065 21.9907814;53.0417694 21.9910252
 101120;200707;Szkoła Podstawowa w Śniadowie|Śniadowo|ul. Łomżyńska 29 |18-411 Śniadowo;53.0382065 21.9907814;53.0417694 21.9910252
 101121;200707;Gminny Ośrodek Kultury w Śniadowie|Śniadowo|ul. Ostrołęcka 13 |18-411 Śniadowo;53.0382065 21.9907814;53.0395377 21.9863673
@@ -1718,7 +1718,7 @@ obwod;teryt;adres;coord;coordP
 101716;220103;Gminne Centrum Kultury i Biblioteka|w Czarnej Dąbrówce|ul.Bytowska 10 |77-116 Czarna Dąbrówka;54.3562129 17.5647322;54.353396 17.5626
 101717;220103;Wiejski Dom Kultury|Jasień| 6 |77-122 Jasień;54.285814 17.628052;54.285814 17.628052
 101718;220103;Budynek byłej Szkoły Podstawowej|Mikorowo| 15/2 |76-243 Mikorowo;54.4155101 17.5780072;54.413255 17.580627
-101719;220103;Zespół Szkół w Rokitach|Rokity| 34 |77-123 Rokity;52.4079251 16.8388638;54.340005 17.689545
+101719;220103;Zespół Szkół w Rokitach|Rokity 34 |77-123 Rokity;52.4079251 16.8388638;54.340005 17.689545
 101720;220103;Zespół Szkół w Nożynie|Nożyno| 40 |77-115 Nożyno;54.3126278 17.5154696;54.315109 17.4933729
 101721;220104;Urząd Gminy|Kołczygłowy|ul. Słupska 56 |77-140 Kołczygłowy;54.2303728 17.2347226;54.24192 17.222306
 101722;220104;Gminny Ośrodek Kultury|Kołczygłowy|ul. Szkolna 1 |77-140 Kołczygłowy;54.2303728 17.2347226;54.240603 17.2267538
@@ -2029,7 +2029,7 @@ obwod;teryt;adres;coord;coordP
 102027;220601;Szkoła Muzyczna|Kościerzyna|ul. Dworcowa 12 |83-400 Kościerzyna;54.1222457 17.9812605;54.122677 17.986916
 102028;220601;Szpital Specjalistyczny|Kościerzyna|Piechowskiego 36 |83-400 Kościerzyna;54.1222457 17.9812605;54.121273 17.949956
 102029;220602;Gimnazjum im. Kard. S. Wyszyńskiego|Dziemiany|ul. Wyzwolenia 20 |83-425 Dziemiany;54.0058465 17.7763729;54.007228 17.7700509
-102030;220602;Szkoła Podstawowa im. Gen. St. Sosabowskiego|Kalisz|ul. Pomorska 8 |83-425 Dziemiany;54.0058465 17.7763729;51.7672799 18.0853462
+102030;220602;Szkoła Podstawowa im. Gen. St. Sosabowskiego|Kalisz|ul. Pomorska 8 |83-425 Kalisz;54.042672, 17.798794;54.042672, 17.798794
 102031;220602;Zespół Kształcenia i Wychowania|Dziemiany|ul. Wyzwolenia 20 |83-425 Dziemiany;54.0058465 17.7763729;54.007228 17.7700509
 102032;220603;Sala Sportowa w Karsinie|Karsin|Parkowa 10 |83-440 Karsin;53.8961626 17.9238714;53.9080957 17.9185011
 102033;220603;Zespół Szkół Nr 2 w Wielu|Wiele|Wicka Rogali 7 |83-441 Karsin;53.9465404 17.8885036;53.921991 17.864784
@@ -2367,7 +2367,7 @@ obwod;teryt;adres;coord;coordP
 102365;221208;Zespół Szkół|Jezierzyce|Szkolna 3 |76-200 Słupsk;54.496266 17.110665;54.496266 17.110665
 102366;221208;Szkoła Podstawowa|Wrzeście 44 |76-200 Słupsk;54.687009 17.63187;54.687009 17.631878
 102367;221208;Szkoła Podstawowa|Głobino 47 |76-200 Słupsk;54.438995 17.106915;54.438995 17.106915
-102368;221208;Świetlica Wiejska|Kusowo 10c |76-200 Słupsk;53.810989 16.549201;53.810989 16.549201
+102368;221208;Świetlica Wiejska|Kusowo 10c |76-200 Słupsk;54.4330864 17.0802461;54.4330864 17.0802461
 102369;221208;Szkoła Podstawowa|Włynkówko|Błękitna 17 |76-200 Słupsk;54.464148 17.0284824;54.506433 17.001402
 102370;221208;Szkoła Podstawowa|Bierkowo|Grodzka 89 |76-200 Słupsk;54.464148 17.0284824;54.476778 16.92979
 102371;221208;Świetlica Wiejska|Swołowo 41 |76-206 Słupsk;54.478226 16.843737;54.478226 16.843737
@@ -2945,7 +2945,7 @@ obwod;teryt;adres;coord;coordP
 102943;226101;Stowarzyszenie MONAR Ośrodek Leczenia, Terapii i Rehabilitacji Uzależnień dla Dzieci i Młodzieży w Gdańsku|Gdańsk, Matarnia|ul. Agrarna 2 |80-298 Gdańsk 16;51.8553704 4.5102702;54.372602 18.5126269
 102944;226101;Dom Pomocy Społecznej|Gdańsk, Oliwa|ul. Polanki 121 |80-308 Gdańsk 5;54.3954231 18.5686809;54.39709 18.564025
 102945;226101;7 Szpital Marynarki Wojennej z Przychodnią SP ZOZ|Gdańsk, VII Dwór|ul. Polanki 117 |80-308 Gdańsk 5;54.3954231 18.5686809;54.394007 18.5669587
-102946;226101;Dom Studencki Nr 3|Gdańsk, Wrzeszcz Górny|ul. Do Studzienki 32 |80-227 Gdańsk 6;54.406114 18.6365753;50.146181 20.9073934
+102946;226101;Dom Studencki Nr 3|Gdańsk, Wrzeszcz Górny|ul. Do Studzienki 32 |80-227 Gdańsk 6;54.3750947 18.6132621;54.3750947 18.6132621
 102947;226101;Dom Studencki Nr 8|Gdańsk, Wrzeszcz Dolny|ul. Wyspiańskiego 5A |80-434 Gdańsk 6;54.406114 18.6365753;54.3520252 18.6466384
 102948;226201;Zespół Szkół Ekologicznych|Gdynia|ul. Chylońska 237 |81-007 Gdynia;54.5430183 18.4695835;54.5468829 18.444679
 102949;226201;Zespół Szkół nr 9|Gdynia|ul. Chylońska 227 |81-007 Gdynia;54.5430183 18.4695835;54.5480212 18.4467121
@@ -3116,12 +3116,12 @@ obwod;teryt;adres;coord;coordP
 103114;226301;Dom Pomocy Społecznej Leśna Oaza|Słupsk|ul. Leśna 8 |76-200 Słupsk;54.464148 17.0284824;54.448661 17.048554
 103115;226301;Samodzielny Publiczny Specjalistyczny Psychiatryczny Zakład Opieki Zdrowotnej|Słupsk|ul. Obrońców Wybrzeża 4 |76-200 Słupsk;54.464148 17.0284824;54.468683 17.044187
 103116;226401;Zespół Szkół Nr 3|Sopot|ul. Jana Jerzego Haffnera 55 |81-715 Sopot;54.4569778 18.5564384;54.449116 18.5624417
-103117;226401;Państwowa Galeria Sztuki|Sopot|Plac Zdrojowy 2 |81-718 Sopot;46.1551297 15.7305599;54.4454612 18.5696073
+103117;226401;Państwowa Galeria Sztuki|Sopot|Plac Zdrojowy 2 |81-718 Sopot;54.4454612 18.5696073;54.4454612 18.5696073
 103118;226401;Zespół Szkół Handlowych|Sopot|ul. Tadeusza Kościuszki 18/20 |81-704 Sopot;54.4440078 18.5666685;54.4406304 18.5635879
 103119;226401;Wojewódzki Zespół Reumatologiczny Zakład Rehabilitacji Leczniczej|Sopot|Plac Zdrojowy 3 |81-759 Sopot;54.4433212 18.563343;54.445282 18.570287
 103120;226401;Centrum Kształcenia Ustawicznego|Sopot|ul. Tadeusza Kościuszki 22/24 |81-704 Sopot;54.4440078 18.5666685;54.4400558 18.5636253
 103121;226401;Zespół Szkół Specjalnych Nr 5|Sopot|ul. Kazimierza Wielkiego 14 |81-780 Sopot;54.4396476 18.5703392;54.43976 18.5706339
-103122;226401;Muzeum Sopotu|Sopot|ul. Księcia Józefa Poniatowskiego 8 |81-724 Sopot;46.1551297 15.7305599;54.440017 18.576054
+103122;226401;Muzeum Sopotu|Sopot|ul. Księcia Józefa Poniatowskiego 8 |81-724 Sopot;54.440017 18.576054;54.440017 18.576054
 103123;226401;Szkoła Podstawowa Nr 8|Sopot|ul. 3 Maja 41 |81-743 Sopot;54.4375572 18.5715713;54.435275 18.5704709
 103124;226401;Przedszkole Nr 8|Sopot|ul. Jana z Kolna 3 |81-742 Sopot;54.4389495 18.5661907;54.433779 18.56948
 103125;226401;Szkoła Podstawowa Nr 1 (wejście od ul. Bocznej)|Sopot|ul. Armii Krajowej 50/54 |81-843 Sopot;54.4302558 18.5616693;54.4361697 18.5592935
@@ -7585,7 +7585,7 @@ obwod;teryt;adres;coord;coordP
 107588;281403;Świetlica Wiejska|Cerkiewnik| 16 |11-040 Dobre Miasto;53.9867 20.39746;53.9159258 20.3894826
 107589;281403;Świetlica Wiejska|Głotowo| 44b |11-040 Dobre Miasto;53.9867 20.39746;53.9591295 20.3626488
 107590;281403;Świetlica Wiejska|Knopin| 39 |11-040 Dobre Miasto;53.9867 20.39746;53.9597868 20.4054885
-107591;281403;Świetlica Wiejska|Łęgno| 18 |11-040 Dobre Miasto;53.9867 20.39746;53.7613705 14.9792764
+107591;281403;Świetlica Wiejska|Łęgno| 18 |11-040 Dobre Miasto;53.9867 20.39746;53.9867 20.39746
 107592;281403;Świetlica Wiejska|Praslity| 20 |11-040 Dobre Miasto;53.9867 20.39746;54.021984 20.347222
 107593;281403;Środowiskowy Dom Samopomocy w Piotraszewie|Piotraszewo| 7 |11-040 Dobre Miasto;53.9867 20.39746;54.063551 20.387853
 107594;281403;Świetlica Wiejska|Smolajny| 4 |11-040 Dobre Miasto;53.9867 20.39746;54.02543 20.4101079
@@ -9750,7 +9750,7 @@ obwod;teryt;adres;coord;coordP
 109753;302803;Przedszkole Publiczne|Gołańcz|ul. Karola Libelta 1 |62-130 Gołańcz;52.9432129 17.2996897;[ZERO_RESULTS] 
 109754;302803;Gołaniecki Ośrodek Kultury|Gołańcz|ul. Dr Piotra Kowalika 1 |62-130 Gołańcz;52.9432129 17.2996897;52.9440397 17.2982555
 109755;302803;Zespół Szkół Ponadgimnazjalnych|Gołańcz|ul. Walki Młodych 35 |62-130 Gołańcz;52.9432129 17.2996897;52.9406194 17.291076
-109756;302803;Świetlica wiejska w Chojnie|Chojna| 55 |62-130 Gołańcz;52.9432129 17.2996897;52.96401 14.42781
+109756;302803;Świetlica wiejska w Chojnie|Chojna| 55 |62-130 Gołańcz;52.9432129 17.2996897;52.9432129 17.2996897
 109757;302803;Świetlica wiejska w Czesławicach|Czesławice| 20 |62-130 Gołańcz;52.9432129 17.2996897;52.9853309 17.2205349
 109758;302803;Zespół Szkół w Panigrodzu|Panigródz| 24 |62-130 Gołańcz;52.9432129 17.2996897;52.9569697 17.3993377
 109759;302803;Świetlica wiejska w Czeszewie|Czeszewo| 58 |62-130 Gołańcz;52.9432129 17.2996897;52.9102084 17.4333817
