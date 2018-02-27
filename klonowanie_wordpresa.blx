@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Przeniesienie bloga zarządzanego przez WordPress na inny komputer</title>
+<!-- Tags: wordpress,linux,sheevaplug,debian,stretch-->
+</head><body><!-- ##Published : 2017-11-20T03:27:30CEST ##-->
+
+<p>Problem jest oto taki, że chcę przenieść kopię
+bloga (oryginał jest/był na serwerze <code>nazwa.pl</code>) na Sheevaplug (taki rodzaj NAS), która byłaby dostępna
+przez Internet. Pierwszy krok do likwidacji bloga na <code>nazwa.pl</code>, bo drogo BTW.
+</p>
+<p>
+Na Sheevaplug jest zainstalowany Debian w wersji Stretch
+i nie ma WordPressa.</p>
+
+<p>Rozpocząłem od pobrania narzędzia <code>wp-cli</code>
+ze strony <a href='http://wp-cli.org/'>wp-cli.org/</a>.
+Zainstalowałem toto (prawie) w sposób opisany na ww. stronie, tj.:
+</p>
+
+<pre>
+https://raw.github.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+php wp-cli.phar --info
+chmod +x wp-cli.phar
+sudo mv wp-cli.phar ~/bin/wp
+</pre>
+<p>
+Heurystycznie ustaliłem, że treść tego konkretnego
+klonowanego bloga znajduje
+się bazie <code>mysql</code> (teksty)
+oraz w katalogu <code>wp-content</code>, w którym to w szczególności są
+zdjęcia (<code>wp-content/gallery</code>) oraz filmy i chmara jakiś plików <code>.gif</code>
+(<code>wp-content/wp-uploads</code>). 
+Oprócz tego są jeszcze katalogi <code>themes</code>,
+<code>upgrade</code>, <code>plugins</code>, <code>ngg</code> oraz <code>languages</code>.
+Uprzedzając
+wydarzenia wszystko kopiuję
+jak leci ze starej instalacji (w obu jest/będzie ta sama wersja WP).
+Natomiast teksty z bazy eksportuję (do pliku SQL):
+</p>
+
+<pre>
+ wp db export
+</pre>
+
+<p>Można też to zrobić logując się do <code>URL-BLOGA/wp-admin</code>. Teraz wszystko ściągam
+korzystając z <code>rsync</code> (<code>/media/WP-SITE/</code>
+oraz <code>/media/WPSQL/</code> to oczywiście przykłady):
+</p>
+
+<pre>
+rsync -avzP -e "ssh" USER@BLOG:PATH-TO-WP/wp-content/* /media/WPSITE/
+rsync -avzP -e "ssh" USER@BLOG:PATH-TO-WP/_sqldump_/* /media/WPSQL/
+</pre>
+
+<p>Zamiast rsync można użyć <code>ftp</code> albo:</p>
+
+<pre>
+scp -r USER@BLOG:path/to/files/
+</pre>
+
+<p>
+Teraz
+  pobrałem archiwum WP
+  ze strony <a href='https://wordpress.org/download/'>wordpress.org/download/</a> i rozpakowałem je
+  (Uwaga: być może można skopiować po prostu całą starą instalację WP na nowy komputer i będzie działać,
+ale ja tak nie robiłem.):
+</p>
+
+<pre>
+wget https://wordpress.org/latest.tar.gz
+tar -zxvf latest.tar.gz
+</pre>
+<p>Za pomocą klienta <code>mysql</code> stworzyłem użytkownika pn. wordpress,
+który otrzymał stosowne uprawnienia. Utworzyłem następnie bazę
+pn. <code>wordpress</code>:</p>
+
+<pre>
+  mysql> CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+  mysql> CREATE DATABASE wordpress;
+  Query OK, 1 row affected (0.00 sec)
+ 
+  mysql> GRANT ALL PRIVILEGES ON wordpress.* TO 'user'@'localhost'
+  -> IDENTIFIED BY '*password*';
+    Query OK, 0 rows affected (0.00 sec)
+</pre>
+
+<p>Następnie wstawiłem stosowne wpisy do  <code>wp-config.php</code></p>
+
+<pre>
+define('DB_NAME', 'wordpress');
+define('DB_USER', '**USER**');
+define('DB_PASSWORD', '**PASSWORD**');
+define('DB_HOST', 'localhost');
+define('DB_CHARSET', 'utf8');
+</pre>
+
+<p>Teraz zaimportowałem treść bloga do bazy:</p>
+
+<pre>
+wp db import kopia-bazy.sql --path='/var/www/html/'
+</pre>
+
+<p>Doczytałem, że trzeba zmienić URLe ze starych na nowe:</p>
+
+<pre>
+wp search-replace 'STARY-URL' 'NOWY-URL' --dry-run
+</pre>
+
+<p>Konkretnie w moim przypadku:</p>
+
+<pre>
+  wp search-replace 'http://nazwabloga.nazwa.pl/' 'http://oberon.pinkaccordions.org/' \
+  --path='/var/www/html/' --dry-run
+  ## --dry-run nic nie zmienia ale wyświetla raport
+  ## jeżeli wszystko jest OK:
+    wp search-replace 'http://nazwabloga.nazwa.pl/' 'http://oberon.pinkaccordions.org/' \
+     --path='/var/www/html/'
+</pre>
+<p>Sprawdzam i nie działa, ale wypisuje, że nie ma jakiegoś theme. No to kopiuję jak leci
+ze starej instalacji katalogi
+<code>themes</code>, <code>upgrade</code>, <code>plugins</code>, <code>ngg</code>,
+<code>languages</code>, o czym już pisałem. Teraz działa.
+</p>
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/oberon8088.png'>
+ <img width='240px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/oberon8088.png'/>
+ </a>
+ <br/>
+</div>
+
+<p>Jeszcze został problem udostępnienia tego w Interncie poprzez DynDNS. Sprawę komplikuje
+to, że mam już dwa zarejestrowane serwisy a Tomato wydaje się obsługiwać tylko dwa hosty.
+Okazuje się wszakże że pole host niekoniecznie musi zawierać pojedynczy wpis,
+może zawierać listę oddzielonych przecinkami nazw hostów. No to dopisałem następny
+host z puli, którą mam oraz dopisałem
+co trzeba w Tomato.
+</p>
+
+<p>Dodatkowa komplikacja jest taka, że chcę ten sklonowany blog udostępnić
+na innym komputerze.
+Konkretnie do tej pory udostępniałem jeden komputer,
+a teraz będą dwa. Na taką okoliczność oprócz dopisania nazwy hosta do listy
+trzeba także zmodyfikować wpis w części <em>port forwarding</em> (por. rysunek). Drugi komputer wymaga mianowicie
+zadeklarowania innego ExPort-u.)</p>
+
+<p>Po tym wszystkim nadal działa:-)</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

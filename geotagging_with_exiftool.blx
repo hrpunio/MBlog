@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Geotagging images with ExifTool</title>
+<!-- Tags: exiftool,english,gpx,photo-->
+</head><body><!-- ##Published : 2017-10-31T03:18:32CEST ##-->
+<p>Note: <strong>Below it is assumed that ExifTool is used in MS Windows environment</strong>.</p>
+
+<!-- http://blog.mastermaps.com/2014/08/geotagging-photos-using-gps-tracks.html -->
+<!-- https://sno.phy.queensu.ca/~phil/exiftool/geotag.html -->
+<!--
+exiftool -geotag=my.gpx ./
+If you forgot to sync the camera and GPS time before your trip, you can use the geosync-option to fix it: (60:00 = 60 minutes):
+exiftool -geotag=20140329.gpx -geosync=-60:00 ./ -->
+
+<p>
+Download the ExifTool.exe file and place it in some directory (SomeDir)
+</p>
+<p>
+Open the Command line (go to windows search, type cmd and the window will open)
+</p>
+<p>
+In the command line window, change directory to SomeDir. 
+</p>
+
+<h4>Geotagging photos using GPX log</h4>
+<p>
+Photos taken with  modern smartphones are already geotagged (if Location option is On.)
+</p>
+<p>
+If camera is unable to add geocoordinates geotagging is still possible if 
+GPS log is available (registered with some external GPS receiver/logger).
+</p>
+
+<h4>Synchronize photos with GPS log</h4>
+<p>
+Download the GPX file from your GPS receiver/logger (exact procedure depends on
+the type of GPS receiver) to SomeDir.
+</p>
+<p>
+Take picture of GPS receiver/or any screen displaying
+accurate time (PC/Smartphone screen for example).
+</p>
+<p>
+Type in command line:
+</p>
+<pre>
+exiftool -DateTimeOriginal IMG_20171021_113121.jpg 
+Date/Time Original : 2017:10:29 11:52:46
+</pre>
+<p>
+So the file was created at 11:52:46 according to <code>DateTimeOriginal</code> tag.
+Exact time is depicted.
+and if for example the time depicted (accurate time) is 11:50:19 CET
+and DateTimeOriginal is 11:52:46 CET, then
+the time difference is 11:32:46 - 11:50:19 = 2min 27s, ie. accurate time is obtained
+by substracting 2min 27s from DateTimeOriginal.
+</p>
+<p>
+All GPS receivers internally use/record UTC time only,
+even if they display local time (cf
+<a href='https://en.wikipedia.org/wiki/UTC_offset'>UTC_offset</a>).
+Usually the camera internally uses local time. If it is the case
+one should declare appropriate UTC_offset (otherwise exiftool uses system offset).
+</p>
+<p>
+Copy all photos to SomeDir.
+</p>
+<p>
+Type in command line:
+</p>
+<pre>
+exiftool -geosync=-02:27 '-geotime&lt;${DateTimeOriginal}+01:00' -geotag my_gps.log SomeDir
+</pre>
+<p>
+The Geotime tag specifies the point in time for which the GPS position is calculated.
+<code>-geotime&lt;${DateTimeOriginal}+01:00</code> means GPS position is calculated according
+to <code>DateTimeOriginal</code> and it is CET time (+01:00 offset from UTC)
+</p>
+<p>
+The Geosync tag specifies extra time drift, as explained above.
+</p>
+<h4>Generate KML file</h4>
+
+<p>
+Exiftool <code>-p</code> option have to  be used to output files
+in GPX and/or KML. 
+</p>
+<pre>
+exiftool -fileOrder gpsdatetime -p gpx.fmt SomeDir > SomeTripPhotos.gpx
+</pre>
+<p>or
+</p>
+<pre>
+exiftool -fileOrder gpsdatetime -p kml.fmt SomeDir > SomeTripPhotos.kml
+</pre>
+<p>
+KML files can be imported to Google maps and or Google earth.
+</p>
+<p>
+Note: If such a map is not displayed locally
+but upload to some WWW server (<code>http://www.gpsvisualizer.com/</code> in the
+case of GPX file for example), photos have to be uploaded to some server first
+and then URL to photos fixed. Exact procedure depends on which server is used for
+storing photos.
+</p>
+<h4>Example format files</h4>
+
+<p>gpx.fmt</p>
+
+<pre>
+#[HEAD]&lt;?xml version="1.0" encoding="utf-8"?>
+#[HEAD]&lt;gpx version="1.0"
+#[HEAD] creator="ExifTool $ExifToolVersion"
+#[HEAD] xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+#[HEAD] xmlns="http://www.topografix.com/GPX/1/0"
+#[HEAD] xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+#[BODY]&lt;wpt lat="$gpslatitude#" lon="$gpslongitude#">
+#[BODY]  &lt;name>$directory/$filename&lt;/name>
+#[BODY]  &lt;ele>$gpsaltitude#&lt;/ele>
+#[BODY]  &lt;desc>$directory/$filename&lt;/desc>
+#[BODY]  &lt;link href="$directory/$filename">&lt;type>large&lt;/type>&lt;/link>
+#[BODY]  &lt;link href="$directory/$filename">&lt;type>thumbnail&lt;/type>&lt;/link>
+#[BODY]  &lt;time>$gpsdatetime&lt;/time>
+#[BODY]&lt;/wpt>
+#[TAIL]&lt;/gpx>
+</pre>
+
+<p>kml.fmt</p>
+
+<pre>
+#[HEAD]&lt;?xml version="1.0" encoding="UTF-8"?>
+#[HEAD]&lt;kml xmlns="http://earth.google.com/kml/2.0">
+#[HEAD]  &lt;Document>
+#[HEAD]    &lt;name>My Photos&lt;/name>
+#[HEAD]    &lt;open>1&lt;/open>
+#[HEAD]    &lt;Style id="Photo">
+#[HEAD]      &lt;IconStyle>
+#[HEAD]        &lt;Icon>
+#[HEAD]          &lt;href>http://maps.google.com/mapfiles/kml/pal4/icon38.png&lt;/href>
+#[HEAD]          &lt;scale>1.0&lt;/scale>
+#[HEAD]        &lt;/Icon>
+#[HEAD]      &lt;/IconStyle>
+#[HEAD]    &lt;/Style>
+#[HEAD]    &lt;Folder>
+#[HEAD]      &lt;name>Waypoints&lt;/name>
+#[HEAD]      &lt;open>0&lt;/open>
+#[BODY]      &lt;Placemark>
+#[BODY]        &lt;description>&lt;![CDATA[&lt;br/>&lt;table>&lt;tr>&lt;td>
+#[BODY]        &lt;img src='$directory/$filename'
+#[BODY]          width='$imagewidth' height='$imageheight'>
+#[BODY]        &lt;/td>&lt;/tr>&lt;/table>]]&gt;&lt;/description>
+#[BODY]        &lt;Snippet/>
+#[BODY]        &lt;name>$filename&lt;/name>
+#[BODY]        &lt;styleUrl>#Photo&lt;/styleUrl>
+#[BODY]        &lt;Point>
+#[BODY]          &lt;altitudeMode>clampedToGround&lt;/altitudeMode>
+#[BODY]          &lt;coordinates>$gpslongitude#,$gpslatitude#,0&lt;/coordinates>
+#[BODY]        &lt;/Point>
+#[BODY]      &lt;/Placemark>
+#[TAIL]    &lt;/Folder>
+#[TAIL]  &lt;/Document>
+#[TAIL]&lt;/kml>
+</pre>
+
+<p>The above with examples can be download from
+<a href='https://github.com/hrpunio/Z-MISC/tree/master/GeoPhotos'>here</a>
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

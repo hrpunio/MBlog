@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title></title>
+<!-- Tags: -->
+</head><body>
+
+<!-- &#x2192; rightarrow, &#x2190 leftarrow, &#8629; downwardarrow, &#8595; downarrow -->
+<!--<div style='float : right'>
+ <a href=''>
+ <img width='180px' longdesc='[[' alt=''
+   src=''/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>???</em>
+ <br/>
+</div>
+<p><strong>Dopisane 19 marca 2008</strong>:-->
+<p>
+
+
+</p>
+<pre>
+ffmpeg -i video.avi -vf subtitles=subtitle.srt out.avi
+or
+ffmpeg -i video.avi -vf "ass=subtitle.ass" out.avi
+## more: https://trac.ffmpeg.org/wiki/HowToBurnSubtitlesIntoVideo
+</pre>
+
+<pre>
+gpsbabel -i garmin_fit -f FILE.fit -o subrip,format="'%skm/h %hhr %e m [%g] %crpm" -F FILE.srt
+gpsbabel -i gtrnctr -f FILE.tcx 
+</pre>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

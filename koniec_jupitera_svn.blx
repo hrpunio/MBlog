@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Migracja do Debian Stretch na jupiterze (svn)</title>
+<!-- Tags: sheevaplug,debian,stretch,svn-->
+</head><body><!-- ##Published : 2018-02-13T06:40:34CEST ##-->
+
+
+<p>Się poprzedni wpis kończył jakoby odtworzenie repozytorium <code>svn</code>
+było prostą sprawą, ale w praniu się okazało, że nie do końca:</p>
+<pre>
+# zapisanie starego
+svnadmin dump svnrepo &gt; svnR.out
+# odtworzenie
+svnadmin create svnrepo
+svnadmin load svnrepo &lt; svnR.out
+</pre>
+<p>Próba zapisu skutkuje komunikatami o błędach. No tak zachciało
+mi się zmienić port na niestandardowy. Żeby svn wiedział jak się połączyć
+trzeba dopisać (na koncie
+komputera klienta, w sekcji <code>[tunnels]</code>):
+</p>
+<pre>
+vi ~/.subversion/config
+ssh = $SVN_SSH ssh -q -p PORTNUMBER
+</pre>
+
+<pre>
+# addgroup svn
+Adding group `svn' (GID 1002) ...
+# gpasswd -a "tomek" svn
+##Adding user tomek to group svn
+# chgrp -R svn path-to-svnrepo
+</pre>
+<p>Teraz</p>
+
+<pre>
+svn info
+Ścieżka: .
+Working Copy Root Path: /home/tomek/orgfiles
+URL: svn+ssh://tomek@umbriel/media/usbstick/svnrepo/tp/orgfiles
+...
+
+## Zmień svn+ssh://tomek@umbriel/path-to-repo na nowe:
+svn relocate svn+ssh://tomek@umbriel/path-to-repo/path-to-project
+</pre>
+
+<p></p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

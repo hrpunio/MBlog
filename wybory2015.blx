@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory parlamentarne z 2015 w woj pomorskim </title>
+<!-- Tags: inne,polityka,wybory,gft-->
+</head><body><!-- ##Published : 2018-02-27T06:01:44CEST ##--><!-- ##Published : 2018-02-27T06:01:44CEST ##-->
+
+<p>Po latach wykonałem analizę (z rozpędu, zmotywowany analizowaniem
+wyników Danuty Hojarskiej). W województwie pomorskim są dwa okręgi wyborcze:
+25 (Gdańsk) oraz 26 Gdynia. Zbiorcze wyniki z protokołów, które w swoim czasie
+pobrałem ze strony PKW są następujące:</p>
+
+<pre>
+  Komisje obwodowe wg ROZKŁADU głosów ważnych
+  ** Okręg 26 126707 ważne głosy **
+Kandydat    Komitet    Głosy Komisje Max      %  Średnia   Me 
+-------------------------------------------------------------
+Gromadzki   Stonoga     1521  795     12   1.20    1,9    1.0
+Furgo       Petru      14239  795    224  11.23   17,9  10.00
+Zwiercan    Kukiz      11801  795     65   9.31   14.8   13.0
+Miller      Zlew       11524  795     72   9.09   14.5   10.0
+Lewna       Psl         4644  795    213   3.66    5.8    2.0
+Wysocki     Korwin      9491  795     54   7.49   11.9   10.0
+Biernacki   Po         42535  795    312  33.56   53.5   38.0
+Szczypińska PiS        30952  795    150  24.42   38.9   35.0
+
+** Okręg 25 130348 ważne głosy **
+Kandydat    Komitet    Głosy Komisje Max      %  Średnia   Me
+-------------------------------------------------------------
+Hojarska    Stonoga     1668  656    152   1.27    2.5    1.0
+Lieder      Petru      23155  656    256  35.76   35.3   22.0
+Błeńska     Kukiz       9410  656     45   7.21   14.3   14.0
+Senyszyn    Zlew       13143  656     75  10.08   20.3   17.0
+Sarnowski   Psl         3457  656    134   2.65    5.3    2.0
+Rabenda     Korwin      8903  656     65   6.83   13.6   11.0
+Krotowska   Razem       6995  656     45   5.36   10.7    9.0
+Korol       PiS        28657  656    252  21.98   43.7   30.0
+Sellin      PiS        34960  656    213  26.82   53.3   40.0
+</pre>
+<p>Te wyniki mogą (ale nie muszą) się ciut-niewiele różnić od oficjalnych--nie porównywałem</p>
+<p>Czyli na przykład pani Hojarska dostała 1668 głosów w 656 komisjach
+co daje średnio 2,5 głosa/komisję (Mediana 1 głos). Rozkłady liczby głosów
+przedstawione w postaci wykresów słupkowych
+wyglądają następująco (pierwsze trzy
+rysunki to okręg 25, następne trzy to okręg 26):
+</p>
+
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p0.png'>
+ <img width='60%' longdesc='' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p0.png'/>
+ </a>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p1.png'>
+ <img width='60%' longdesc='' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p1.png'/>
+ </a>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p2.png'>
+   <img width='60%' longdesc='' alt=''
+	src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie25_p2.png'/>
+ </a>
+
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p0.png'>
+ <img width='60%' longdesc='' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p0.png'/>
+  </a>
+   <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p1.png'>
+ <img width='60%' longdesc='' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p1.png'/>
+   </a>
+   <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p2.png'>
+ <img width='60%' longdesc='' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jedynki_obwody_pomorskie26_p2.png'/>
+ </a>
+</div>
+
+<p>No i wreszcie przedstawienie wyników na mapie z wykorzystanie Google Fusion Tables
+<a href='https://www.google.com/fusiontables/DataSource?docid=1W7MMOdsLwDFU87nE-buLYRcHpaZHhha-CPOhuA1F'>link do GFT</a>:
+</p>
+
+<iframe width="500" height="300" scrolling="yes"
+	src="https://fusiontables.google.com/embedviz?viz=GVIZ&amp;t=TABLE&amp;q=select+col0%2C+col1%2C+col2%2C+col3%2C+col4%2C+col5%2C+col6+from+1W7MMOdsLwDFU87nE-buLYRcHpaZHhha-CPOhuA1F&amp;containerId=googft-gviz-canvas">
+</iframe>
+
+<p>
+Link do danych jest <a href='https://github.com/hrpunio/MBlog/tree/master/R/sejm2015'>tutaj</a>.
+</p>
+
+<!-- http://alstatr.blogspot.com/2013/06/measures-of-absolute-variability.html -->
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

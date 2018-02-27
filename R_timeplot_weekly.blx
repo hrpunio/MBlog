@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>time plot tygodniowej liczby twitów</title>
+<!-- Tags: r,twitter,statystyka-->
+</head><body><!-- ##Published : 2018-02-21T04:34:12CEST ##-->
+
+<p>Załóżmy, że plik CSV
+zawiera liczbę opublikowanych <em>twitów</em> (dane tygodniowe).
+Problem: przedstawić szereg
+w postaci przebiegu czasowego (<em>time plot</em>).
+Taki skrypt R wymyśliłem do zrealizowania tego zadania:
+</p>
+<pre>
+require(ggplot2)
+
+args &lt;- commandArgs(TRUE)
+ttname &lt;- args[1];
+file &lt;- paste(ttname, ".csv", sep="")
+filePDF &lt;- paste(ttname, ".pdf", sep="")
+
+d &lt;- read.csv(file, sep = ';',  header=T, na.string="NA", );
+## Plik CSV jest postaci:
+
+##str(d)
+
+## wiersze 1,2 + ostatni są nietypowe (usuwamy)
+rows2remove &lt;- c(1, 2, nrow(d));
+d &lt;- d[ -rows2remove, ];
+
+## szacujemy prosty model trendu
+lm &lt;- lm(data=d, posts ~ no ); summary(lm)
+posts.stats &lt;- fivenum(d$posts);
+posts.mean &lt;- mean(d$posts);
+sumCs &lt;- summary(d$posts);
+
+otherc &lt;- coef(lm);
+# W tytule średnia/mediana i równanie trendu
+title &lt;- sprintf ("Weekly for %s # me/av = %.1f/%.1f (y = %.2f x + %.1f)", 
+  ttname, sumCs["Median"], sumCs["Mean"], otherc[2], otherc[1] );
+
+##str(d$no)
+## Oś x-ów jest czasowa
+## Skróć yyyy-mm-dd do yy/mmdd
+d$date &lt;- sub("-", "/", d$date) ## zmienia tylko pierwszy rr-mm-dd
+d$date &lt;- sub("-", "", d$date) ## usuwa mm-dd
+d$date &lt;- gsub("^20", "", d$date) ## usuwa 20 z numeru roku 2018 -> 18
+weeks &lt;- length(d$no);
+## https://stackoverflow.com/questions/5237557/extract-every-nth-element-of-a-vector
+## Na skali pokaż do 20 element /dodaj ostatni `na pałę' (najwyżej zajdą na siebie)
+## możnaby to zrobić bardziej inteligentnie ale nie mam czasu
+scaleBreaks &lt;- d$no[c(seq(1, weeks, 20), weeks)];
+scaleLabs &lt;- d$date[c(seq(1, weeks, 20), weeks)];
+
+ggplot(d, aes(x = no, y = posts)) +
+  geom_line() +
+  ggtitle(title) +
+  ylab(label="#") +
+  xlab(label=sprintf("time (yy/mmdd) n=%d", weeks )) +
+  scale_x_continuous(breaks=scaleBreaks, labels=scaleLabs) +
+  geom_smooth(method = "lm")
+
+ggsave(file=filePDF)  
+</pre>
+<p/>
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

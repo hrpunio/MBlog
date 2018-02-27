@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title></title>
+<!-- Tags: -->
+</head><body>
+
+<!-- &#x2192; rightarrow, &#x2190 leftarrow, &#8629; downwardarrow, &#8595; downarrow -->
+<!--<div style='float : right'>
+ <a href=''>
+ <img width='180px' longdesc='[[' alt=''
+   src=''/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>???</em>
+ <br/>
+</div>
+<p><strong>Dopisane 19 marca 2008</strong>:-->
+<p></p>
+
+apt-get install ddclient
+dpkg-reconfigure ddclient
+
+vi /etc/ddclient.conf
+
+Now make sure DDclient is set to work as a daemon. You need to change 
+run_daemon="false" to run_daemon="true"
+
+vi /etc/default/ddclient
+
+sudo /etc/init.d/ddclient status
+
+
+https://linhost.info/2008/12/ddclient-set-up-for-ubuntu/
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

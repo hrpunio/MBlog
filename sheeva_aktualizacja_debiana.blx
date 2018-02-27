@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Instalowanie Debiana Stretch na SheevaPlug</title>
+<!-- Tags: debian,sheevaplug,stretch,michlmayr,linux-->
+</head><body><!-- ##Published : 2017-11-22T01:31:25CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/Stretch_Installed.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/Stretch_Installed.jpg'/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>Stretch zainstalowany</em>
+ <br/>
+</div>
+
+<p>Co to jest SheevaPlug? Przodek rapberryPi. Ciągle używam, bo
+jest niezawodne, a z rapberryPi jest gorzej -- czasami przestaje działać.
+Rzadko bo rzadko ale się zdarza.)</p>
+
+<p>Ponieważ SheevaPlug (dalej Szewa)
+jest taka stara to i Debian na niej do nowych
+nie należy. Sytuacja dojrzała do wymiany. Mam na szczęście rezerwową/testową
+Szewę, co ułatwia decyzję, bo w razie problemów z aktualizacją nie
+zostanę z niczym.
+</p>
+
+<p>Korzystam z tej samej strony co lata temu kiedy zaczynałem z Szewą,
+tj. <a href='https://www.cyrius.com/debian/kirkwood/sheevaplug/install/'>Installing
+Debian on Plug Computers</a>, która opisuje wszystko detalicznie
+i zawiera wszystko co potrzeba. Procedura jest prosta:
+</p>
+
+<p>
+1. Należy uaktualić firmware zwany U-bootem.  W tym celu trzeba się
+połączyć z Szewą kablem miniUSB-USB i uruchomić na PCcie program <code>cu</code>:
+</p>
+
+<pre>
+cu -s 115200 -l /dev/ttyUSB0
+</pre>
+
+<p>
+Teraz  trzeba włączyć Szewę, a w terminalu
+PCta należy szybko nacisnąć dowolny klawisz co przerywa normalną
+sekwencję startu systemu i U-boot przechodzi do trybu
+interaktywnego zgłaszając się znakiem zachęty. 
+Polecenie:
+</p>
+
+<pre>
+Marvell>> version
+</pre>
+<p>
+Pokazuje wersję system. Jeżeli w nazwie jest Marvell albo wersja jest stara
+(przed 2014/10) to należy dokonać aktualizacji. 
+Przed aktualizację należy koniecznie ustalić MAC adres urządzenia
+Ja miałem przepisany z dokumentacji na obudowie; jak ktoś nie wie jaki ma adres,
+to może wydać polecenie:
+</p>
+
+<pre>
+print ethaddr
+</pre>
+<p>
+Teraz pobieramy stosowny
+<a href='http://ftp.debian.org/debian/dists/stretch/main/installer-armel/current/images/kirkwood/u-boot/sheevaplug/u-boot.kwb'>firmware</a>
+i kopiujemy go na (bootowalny) pendrive.
+Pendrive wsadzamy do Szewy, po czym wydajemy polecenie:
+</p>
+
+<pre>
+usb start
+fatload usb 0:1 0x0800000 u-boot.kwb
+</pre>
+<p>
+Następnie
+</p>
+
+<pre>
+nand erase 0x0 0x80000
+nand write 0x0800000 0x0 0x80000
+</pre>
+<p>
+Restartujemy szewę
+</p>
+
+<pre>
+reset
+</pre>
+<p>
+  Na koniec przywracamy MAC adres
+</p>
+
+<pre>
+setenv ethaddr 00:50:43:01:c0:ab
+saveenv
+reset
+</pre>
+<p>
+Uwaga: przy (re)starcie komputer zawiśnie na etapie ładowania systemu, którego
+jeszcze nie ma...
+</p>
+<p>
+2. Poniższy opis zakłada instalowanie systemu z karty SDHC (bo tak
+jest najprościej, skoro system ma potem być z tejże karty
+uruchamiany). Zatem należy sformatować kartę SDHC jako <code>ext2</code> (wyłącznie
+<code>ext2</code>, nie należy używać innych typu <code>ext4</code>, że niby lepsze).
+Do tego użyłem <code>gparted</code>.
+</p>
+
+<p>
+  3. Pobieramy instalator składający się z 2 plików (SheevaPlug without eSATA:
+  <a href='http://ftp.debian.org/debian/dists/stretch/main/installer-armel/current/images/kirkwood/netboot/marvell/sheevaplug/uImage'>uImage</a>
+  and <a href='http://ftp.debian.org/debian/dists/stretch/main/installer-armel/current/images/kirkwood/netboot/marvell/sheevaplug/uInitrd'>uInitrd</a>).
+Pobrane plik kopiujemy na sformatowaną kartę.
+Kartę wsadzamy do Szewy, z którą połączymy się kablem miniUSB/USB i programem <code>cu</code>
+w sposób identyczny jak w przypadku aktualizacji firmware'a), wydajemy polecenie:
+</p>
+
+<pre>
+fatload mmc 0:1 0x00800000 /uImage
+fatload mmc 0:1 0x01100000 /uInitrd
+</pre>
+<p>
+Uruchamiamy instalator:
+</p>
+
+<pre>
+setenv bootargs console=ttyS0,115200n8 base-installer/initramfs-tools/driver-policy=most
+bootm 0x00800000 0x01100000
+</pre>
+<p>
+Instalacja trochę trwa, ale jest bezproblemowa. <em>Well</em>, był problem bo
+zapomniałem wpisać następującej sekwencji (<em>When the installation is
+done, you have to configure u-boot so it will automatically boot
+Debian. Interrupt the boot process of u-boot and enter the following
+commands.</em>):
+</p>
+
+<pre>
+setenv bootargs_console console=ttyS0,115200
+setenv bootcmd_mmc 'ext2load mmc 0:1 0x00800000 /uImage; ext2load mmc 0:1 0x01100000 /uInitrd'
+setenv bootcmd 'setenv bootargs ${bootargs_console}; run bootcmd_mmc; bootm 0x00800000 0x01100000'
+saveenv
+</pre>
+
+<p>
+Przyznam się bez bicia, że ponieważ pominąłem ten krok i system
+zawisł beznadziejnie potrzebna
+była konsultacja aż samego <a href='https://pl.wikipedia.org/wiki/Martin_Michlmayr'>Marina Michlmayra</a>.
+</p>
+
+<p>
+Uwaga: <code>0:1</code> to nazwa bootowalnej partycji. Może być inna, można to ustalić
+wpisując (pierwsza wypisana jest bootowalna):
+</p>
+
+<pre>
+Marvell>> usb dev
+Marvell>> usb part 0
+</pre>
+<p>
+Ostatecznie:
+</p>
+
+<pre>
+run bootcmd
+</pre>
+<p>
+Znowu dałem D... Nie przywracając MAC-adresu, co objawiło się tym że wprawdzie
+system się bootował ale instalator nie mógł się połączyć z Internetem. Należy
+czytać dokumentację uważnie i bez pośpiechu cnd.
+</p>
+<p>
+Z uwagi na to, że projekt Szewa wydaje sie być <em>dead&amp;burried</em> skopiowałem
+co trzeba lokalnie <a href='https://github.com/hrpunio/MBlog/blob/master/misc/sheeva_stretch_installer.tgz'>tutaj</a>,
+na wypadek gdyby zniknęło w Internecie.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

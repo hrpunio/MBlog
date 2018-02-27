@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Migracja do Debian Stretch na jupiterze</title>
+<!-- Tags: sheevaplug,debian,stretch-->
+</head><body><!-- ##Published : 2018-02-03T03:06:02CEST ##-->
+
+<p>Jupiter to mój niepubliczny serwer. Podłączona do niego jest stacja pogody,
+termometry DS18B20, wykonywane są kopie zapasowe oraz założone repozytorium CSV.
+No i to powodowało że zabierałem się do aktualizacji systemu
+jak do jeża. Wszystko było tak stare, że już zapomniałem jak działa--a że działało, to teoretycznie
+nie było potrzeby wymiany.</p>
+<p>Z drugiej strony jednak: system był już tak wiekowy, że niepielęgnowany. Nic
+nie można było ani doinstalować ani uaktualnić. Ponadto na drugiej szewie
+była inna wersja -- uruchamiany z karty SDHC Debian Lenny. Uruchamianie
+z karty (zamiast tego co jest wbudowane w komputerek) wydaje mi się bardziej
+eleganckie <em>after all</em>. No więc sytuacja dojrzała...
+</p>
+
+<p>Obejrzałem sobie pliki <code>crontab</code> (roota i jedynego użytkownika tomek)
+i ustaliłem co trzeba uruchomić: <code>rsync</code> do robienia kopii zapasowych (nie
+pamiętam jak); <code>pywwws</code> do pobierania danych ze stacji pogodowej
+i wysyłania na wundergroud oraz
+jakieś skrypty Perla do prezentowania danych pogodowych na stronie
+<code>pinkaccordions.blogspot.org</code> (nie pamiętam jak to było konfigurowane);
+wreszcie odtworzenie repozytorium <code>svn</code>, którego używam na potrzeby wewnętrzne.
+</p>
+
+<pre>
+  ## Pobranie instalacja:
+  root@umbriel:/home/tomek# pip install pywws
+  Collecting pywws
+  Downloading pywws-17.11.0.tar.gz (465kB) ....
+
+  ## Testowania czy działa:
+  root@umbriel:/home/tomek# pywws-testweatherstation
+  10:52:45:pywws.Logger:pywws version 17.11.0, build 1380 (b01d94a)
+  0000 55 aa 80 10...
+  
+  ## pakiet został umieszczony tutaj:
+  /usr/local/lib/python2.7/dist-packages/pywws
+  
+  ## Inicjalizacja (/media/usbstick/Logs/weather/ to katalg z danymi)
+  python -m pywws.LogData -vvv /media/usbstick/Logs/weather/
+  ## Tutaj jest plik konfigurujący
+  vi /media/usbstick/Logs/weather/weather.ini
+
+  ## musiałem dodać typ stacji: ws type = 1080
+  ## Wpis do Crontaba
+  ## Dane pogodowe z WS1080
+  ## 9 * * * *  /usr/local/bin/pywws-hourly -v /media/usbstick/Logs/weather >> \
+  ##   /media/usbstick/Logs/root/weather/Hourly.log 2>&amp;1
+</pre>
+<p>Wszystko działa but the wundergound. Trzeba dokonfigurować plik
+weather.ini, żeby pywwws wysyłało tam stosowne dane.</p>
+<pre>
+[underground]
+station = IPOMORSK8
+password = &lt;PASSWORD>
+template = default
+
+[hourly]
+services = ['underground']
+text = []
+plot = []
+</pre>
+<p>Dokładnie ma być jak wyżej <code>underground</code> a nie
+<code>wunderground</code>, bo tak się nazywa plik 
+(/usr/local/lib/python2.7/dist-packages/pywws/services/).
+</p>
+<p>Ponieważ mam dwie stacje (druga kupiona w projekcie, który nie został
+w końcu zrealizowany), to podłączyłem to drugą, do komputera
+z Debian Lenny (tego uaktualnię za czas jakiś, żeby mieć to samo na obu).
+Z tym drugim był większy problem bo w systemie nie ma pipa (pipy?)
+</p>
+
+<pre>
+#http://pywws.readthedocs.io/en/latest/guides/getstarted.html#test-weather-station
+# stacja #2 ::
+
+wget --no-check-certificate https://pypi.python.org/packages/49/ed/cd05eff0177b569c60230db5c13aded51355aada59f7f9d441d2d1353c4f/pywws-17.11.0.tar.gz
+tar -zxvf pywws-17.11.0.tar.gz 
+cd pywws-17.11.0
+python setup.py build
+python setup.py install
+
+wget --no-check-certificate https://pypi.python.org/packages/fc/38/026f001aa0cf2656a3e52556be73cb2a84fc7f6f40ae1bf75099cb6fa3ea/libusb-1.0.21b1.zip
+unzip libusb-1.0.21b1.zip 
+cd libusb-1.0.21b1
+python setup.py build
+python setup.py install
+
+wget --no-check-certificate https://pypi.python.org/packages/ec/5d/4fdac6c53525786fe35cff035c3345452e24e2bee5627893be65d12555cb/libusb1-1.6.4.tar.gz
+tar -zxvf libusb1-1.6.4.tar.gz 
+cd libusb1-1.6.4
+python setup.py build
+python setup.py install
+
+neptune:/home/tomek# mkdir /media/patriot/Logs
+neptune:/home/tomek# mkdir /media/patriot/Logs/weather
+neptune:/home/tomek#  python -m pywws.LogData -vvv /media/patriot/Logs/weather/
+09:27:28:pywws.Logger:pywws version 17.11.0, build 1380 (b01d94a)
+09:27:28:pywws.Logger:Python...
+
+## Na stronie wunderground dodałem drugą stację, po czym
+## dopisałem co trzeba do weather.ini
+vi /media/patriot/Logs/weather/weather.ini
+
+[underground]
+station = ISOPOT14
+password = &lt;PASSWORD>
+template = default
+</pre>
+<p>Obie działają</p>
+
+<h4>Kopie zapasowe</h4>
+<p>No robię kopie, chociaż nie były mi potrzebne przez 6 lat eksploatacji moich komputerków.
+Strategia jest
+taka, że co tydzień robię kopię całego systemu a co 24h wybranych katalogów.
+Wszystko w sumie prosto ale problem pojawił się w przypadku tworzenia
+kopii na innym komputrze:
+</p>
+<pre>
+#!/bin/bash
+# Kopią jest cały system na innym komputerze (neptune):
+SOURCE=neptune::wholefs/
+ROOTLOG=/media/usbstick/Logs/root/RSync/rsync-neptune.log
+
+EXCLUDE=/root/.rsync/backup_exclude_neptune.lst
+DESTDIR=/public/sheeva/backup/neptune/rootfs
+COPYDIR=/public/sheeva/backup/neptune
+rsync -av --bwlimit=500 --exclude-from=${EXCLUDE} --delete ${SOURCE} ${DESTDIR}
+
+## Edytujemy /etc/rsyncd.conf
+max connections = 2
+log file = /var/log/rsync.log
+timeout = 300
+
+[share]
+comment = Public Share
+path = /home/share
+read only = no
+list = yes
+uid = nobody
+gid = nogroup
+auth users = tomek
+secrets file = /etc/rsyncd.secrets
+
+##  Zawartość rsyncd.secrets
+
+/etc/rsyncd.secrets
+user:&lt;PASSWORD>
+
+## /etc/hosts
+#Dopisane
+192.168.1.142   neptune.pinaccordions.org       neptune
+     
+## na neptune konfiguracja demona
+/etc/rsyncd.conf
+hosts allow = 192.168.1.121
+</pre>
+
+<p>Sprawdzenie czy działa</p>
+
+<pre>
+rsync neptune::wholefs/
+</pre>
+
+<h4>Svn</h4>
+<p>Prosta sprawa</p>
+<pre>
+# zapisanie starego
+svnadmin dump svnrepo &gt; svnR.out
+# odtworzenie
+svnadmin create svnrepo
+svnadmin load svnrepo &lt; svnR.out
+</pre>
+<p>Ponieważ mam trzy sheevy, miałem ten komfort że uruchomiłem zapasową, na której
+wszystko dokonfigurowałem. Ta nowa którą nazwałem umbriel przejęła zadania starej, którą po 6 latach
+wyłączyłem. Zamiast jupitera jest zatem umbriel (księżyc Urana),
+bo jupiter się mi już znudził.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Obracanie wideo za pomocą ffmpeg</title>
+<!-- Tags: ffmpeg-->
+</head><body><!-- ##Published : 2017-09-26T04:17:21CEST ##-->
+
+<p>Raz na jakiś czas mi się zdarza źle założyć kamerę i obraz
+jest odwrócony do góry nogami (albo przekręcony o 90 stopni).
+Film z Żuławy wKoło jest <em>do-góry-nogami</em>. Próbuję postawić go
+na nogi rozpoczynając od mencodera:</p>
+
+<pre>
+time mencoder -vf flip -o plik.avi -oac copy -ovc lavc plik2.avi
+## 26min ale słaba jakość
+</pre>
+
+<p>Słaba jakość. Pewnie można poprawić ale nie wiem jak i nie chce mi
+się zgłębiać dokumentacji. Zamiast tego zmieniam konwerter
+na ffmpeg</p>
+
+<pre>
+time ffmpeg -i plik.we -vf vflip -c:a copy plik.wy
+## 75 minut (jedziemy lewa strona)
+</pre>
+
+<p>Prawie dobrze, tj. głowa jest na górze a nogi na dole, ale
+obraz jest w lustrze (jedziemy lewą stroną ulicy, napisy są w lustrzanym
+odbiciu itp...). W google można znaleść taki przepis:
+</p>
+
+<pre>
+time ffmpeg -i plik.we -vf "transpose=0" -c:a copy plik.wy
+</pre>
+<p>Jak poprzednio tylko przekręca lustro w pionie bez sensu.
+Działa (prawie) prawidłowo następujące wywołanie:
+</p>
+<pre>
+time ffmpeg -i plik.we -vf "transpose=2,transpose=2" -c:a copy plik.wy
+</pre>
+<p>Prawie, ponieważ:
+</p>
+<pre>
+ffmpeg -i plik.wy
+</pre>
+<p>Zgubiły się napisy zawierające współrzędne geograficzne, ale
+to też da się naprawić:
+</p>
+<pre>
+time ffmpeg -i plik.we -vf "transpose=2,transpose=2" -c:a copy -c:s copy plik.wy
+</pre>
+
+<p/>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

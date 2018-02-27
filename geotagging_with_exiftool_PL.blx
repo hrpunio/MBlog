@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Geotagowanie zdjęć za pomocą ExifTool</title>
+<!-- Tags: exiftool,english,gpx,photo-->
+</head><body><!-- ##Published : 2017-10-31T03:18:32CEST ##--><!-- ##Published : 2017-11-02T02:28:05CEST ##-->
+
+<!-- http://blog.mastermaps.com/2014/08/geotagging-photos-using-gps-tracks.html -->
+<!-- https://sno.phy.queensu.ca/~phil/exiftool/geotag.html -->
+<!--
+exiftool -geotag=my.gpx ./
+If you forgot to sync the camera and GPS time before your trip, you can use the geosync-option to fix it: (60:00 = 60 minutes):
+exiftool -geotag=20140329.gpx -geosync=-60:00 ./ -->
+
+<p>
+Uwaga: Poniżej zakłada się, że program ExifTool jest używany
+w środowisku MS Windows.
+</p>
+
+<p>
+Pobierz plik <code>ExifTool.exe</code> i umieść go w jakimś katalogu
+(<code>SomeDir</code>)
+</p>
+<p>
+Otwórz wiersz polecenia (przejdź do wyszukiwania systemu Windows,
+wpisz polecenie cmd i otworzy się okno)
+</p>
+<p>
+W oknie wiersza polecenia zmień katalog na <code>SomeDir</code>.
+</p>
+
+<h4>Geotagowanie zdjęć przy użyciu śladu w formacie GPX</h4>
+
+<p>
+Zdjęcia zrobione z nowoczesnych smartfonów są już geotagowane (jeśli
+opcja Lokalizacja jest włączona).
+</p>
+
+<p>
+  Dla aparatów nie wyposażonych w GPS, geotagowanie jest możliwe
+  jeżeli dysponujemy śladem 
+  (zarejestrowanym za pomocą zewnętrznego odbiornika GPS.)
+</p>
+
+<h4>Synchronizowanie zdjęć ze śladem GPS</h4>
+
+<p>
+Pobierz plik GPX z odbiornika/rejestratora GPS (dokładna procedura
+zależy od typu odbiornika GPS) do katalogu <code>SomeDir</code>.
+</p>
+
+<p>
+Zrób zdjęcie odbiornika GPS/ekranu lub wyświetlacza, na którym
+wyświetlany jest zegar z dokładnym czasem (na przykład ekranu
+komputera/smartfona).
+</p>
+
+<p>
+Wpisz w wierszu poleceń:
+</p>
+
+<pre>
+exiftool -DateTimeOriginal IMG_20171021_113121.jpg 
+Date/Time Original : 2017:10:29 11:52:46
+</pre>
+
+<p>
+Wartość taga <code>DateTimeOriginal</code> określa, że zdjęcie zostało
+wykonane o 11:52:46.  Dokładny czas odczytujemy ze zdjęcia.  Załóżmym
+że czas na zdjęciu wynosi 11:50:19 CET.  Zatem DateTimeOriginal jest
+równe 11:52:46 CET a czas dokładny 11:50:19 CET, stąd różnica 11:32:46
+- 11:50:19 = 2min 27s.
+</p>
+
+<p>
+  Wszystkie odbiorniki GPS wewnętrznie używają/rejestrują wyłącznie
+  używając czasu UTC, nawet jeśli
+na ekranie pokazywany jest czas lokalny
+(Por. <a href='https://en.wikipedia.org/wiki/UTC_offset'>UTC_offset</a>).
+Zwykle aparat wewnętrznie korzysta z czasu lokalnego. Jeśli tak jest, należy
+zadeklarować odpowiednie przesunięcie UTC_offset (w przeciwnym przypadku
+exiftool używa systemowego przesunięcia czasu względem UTC).
+</p>
+
+<p>
+Skopiuj wszystkie zdjęcia do programu <code>SomeDir</code>.
+</p>
+
+<p>
+Wpisz w wierszu poleceń:
+</p>
+
+<pre>
+exiftool -geosync=-02:27 '-geotime&lt;${DateTimeOriginal}+01:00' -geotag my_gps.log SomeDir
+</pre>
+
+<p>
+Tag <code>Geotime</code> określa punkt w czasie dla którego obliczana
+jest pozycja GPS.  Zapis
+<code>-geotime&lt;${DateTimeOriginal}+01:00</code> oznacza, że pozycja
+jest obliczana według czasu z taga <code>DateTimeOriginal</code>. Zaś
+dodanie <code>+01:00</code> ustala CET jako strefę czasową
+(Przesunięcie +01:00 względem UTC)
+</p>
+
+<p>
+Tag Geosync dodaje dodatkowy dryft czasu, jak wyjaśniono powyżej.
+</p>
+
+<h4>Utworzenie pliku KML</h4>
+
+<p>
+Opcja <code>-p</code> służy  do generowania plików GPX i/lub KML.
+</p>
+
+<pre>
+exiftool -fileOrder gpsdatetime -p gpx.fmt SomeDir > SomeTripPhotos.gpx
+</pre>
+
+<p>albo</p>
+
+<pre>
+exiftool -fileOrder gpsdatetime -p kml.fmt SomeDir > SomeTripPhotos.kml
+</pre>
+
+<p>
+Pliki KML mogą być importowane do Map Google i Google Earth.
+</p>
+
+<p>Uwaga: jeżeli mapa ma być wyświetlona nie lokalnie, ale na jakimś
+serwerze WWW (na przykład:
+<code>http://www.gpsvisualizer.com/</code>), zdjęcia muszą być
+przesłane na jakiś serwer, a następnie w pliku KML/GPX należy poprawić
+linki do tychże zdjęć. Dokładna procedura zależy od tego, który serwer
+jest używany do przechowywania zdjęć.
+</p>
+
+<h4>Przykładowe pliki formatów</h4>
+
+<p>gpx.fmt</p>
+
+<pre>
+#[HEAD]&lt;?xml version="1.0" encoding="utf-8"?>
+#[HEAD]&lt;gpx version="1.0"
+#[HEAD] creator="ExifTool $ExifToolVersion"
+#[HEAD] xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+#[HEAD] xmlns="http://www.topografix.com/GPX/1/0"
+#[HEAD] xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+#[BODY]&lt;wpt lat="$gpslatitude#" lon="$gpslongitude#">
+#[BODY]  &lt;name>$directory/$filename&lt;/name>
+#[BODY]  &lt;ele>$gpsaltitude#&lt;/ele>
+#[BODY]  &lt;desc>$directory/$filename&lt;/desc>
+#[BODY]  &lt;link href="$directory/$filename">&lt;type>large&lt;/type>&lt;/link>
+#[BODY]  &lt;link href="$directory/$filename">&lt;type>thumbnail&lt;/type>&lt;/link>
+#[BODY]  &lt;time>$gpsdatetime&lt;/time>
+#[BODY]&lt;/wpt>
+#[TAIL]&lt;/gpx>
+</pre>
+
+<p>kml.fmt</p>
+
+<pre>
+#[HEAD]&lt;?xml version="1.0" encoding="UTF-8"?>
+#[HEAD]&lt;kml xmlns="http://earth.google.com/kml/2.0">
+#[HEAD]  &lt;Document>
+#[HEAD]    &lt;name>My Photos&lt;/name>
+#[HEAD]    &lt;open>1&lt;/open>
+#[HEAD]    &lt;Style id="Photo">
+#[HEAD]      &lt;IconStyle>
+#[HEAD]        &lt;Icon>
+#[HEAD]          &lt;href>http://maps.google.com/mapfiles/kml/pal4/icon38.png&lt;/href>
+#[HEAD]          &lt;scale>1.0&lt;/scale>
+#[HEAD]        &lt;/Icon>
+#[HEAD]      &lt;/IconStyle>
+#[HEAD]    &lt;/Style>
+#[HEAD]    &lt;Folder>
+#[HEAD]      &lt;name>Waypoints&lt;/name>
+#[HEAD]      &lt;open>0&lt;/open>
+#[BODY]      &lt;Placemark>
+#[BODY]        &lt;description>&lt;![CDATA[&lt;br/>&lt;table>&lt;tr>&lt;td>
+#[BODY]        &lt;img src='$directory/$filename'
+#[BODY]          width='$imagewidth' height='$imageheight'>
+#[BODY]        &lt;/td>&lt;/tr>&lt;/table>]]&gt;&lt;/description>
+#[BODY]        &lt;Snippet/>
+#[BODY]        &lt;name>$filename&lt;/name>
+#[BODY]        &lt;styleUrl>#Photo&lt;/styleUrl>
+#[BODY]        &lt;Point>
+#[BODY]          &lt;altitudeMode>clampedToGround&lt;/altitudeMode>
+#[BODY]          &lt;coordinates>$gpslongitude#,$gpslatitude#,0&lt;/coordinates>
+#[BODY]        &lt;/Point>
+#[BODY]      &lt;/Placemark>
+#[TAIL]    &lt;/Folder>
+#[TAIL]  &lt;/Document>
+#[TAIL]&lt;/kml>
+</pre>
+
+<p>Powyższe łącznie z przykładami można pobrać klikając <a
+href='https://github.com/hrpunio/Z-MISC/tree/master/GeoPhotos'>tutaj</a>.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

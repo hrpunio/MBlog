@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>W prawe ucho lewą ręką przez poręcz</title>
+<!-- Tags: inne-->
+</head><body><!-- ##Published : 2018-02-25T04:38:11CEST ##-->
+
+<p>Doszedłem do punktu, w którym tylko tak mogę się podrapać:-)</p>
+<p>Mianowicie do pisania bloga używam ciągle kodowania ISO8859-2. Chciałem zmienić na UTF-8,
+ale wymagałoby to pewnych zabiegów związanych z późniejszym publikowaniem.
+Nie wchodząc w szczegóły nie chce mi się poświęcać temu czas.
+</p>
+<p>Z drugiej strony czasami ISO-8859-2 ogranicza. Na tę okoliczność wymyśliłem sprytny
+trick: teksty zawierająca nieincydentalne znaki spoza ISO8859-2
+będę pisał w UTF-8 a potem zamienię znaki spoza zakresu ISO8859-2
+na character entities typu <code>&amp;cośtam;</code> a resztę przekoduję do ISO.
+Dało się:
+</p>
+<pre>
+  ## zmienia UTF na encje (http://billposer.org/Software/uni2ascii.html)
+  uni2ascii -e -a D ekstremalna_skosnosc.bl8 > ekstremalna_skosnosc.enc
+  ## zmienia encje na znaki iso8859-2 (tylko polskie znaki): 
+  perl entutf2iso88592.pl ekstremalna_skosnosc.enc > ekstremalna_skosnosc.blx
+</pre>
+<p>Śmiesznie, ale działa. Programu <code>uni2ascii</code> nie było
+w archiwach Fedory,
+ale bez problemu się skompilował ze źródła.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

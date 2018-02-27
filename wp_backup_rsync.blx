@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title></title>
+<!-- Tags: -->
+</head><body>
+
+<!-- &#x2192; rightarrow, &#x2190 leftarrow, &#8629; downwardarrow, &#8595; downarrow -->
+<!--<div style='float : right'>
+ <a href=''>
+ <img width='180px' longdesc='[[' alt=''
+   src=''/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>???</em>
+ <br/>
+</div>
+<p><strong>Dopisane 19 marca 2008</strong>:-->
+
+<p>
+Logowanie SSH bez hasła za pomocą ssh-keygen i ssh-copy-id
+</p>
+
+<p>
+SSH-Keygen to narzędzie, które służy do tworzenia, zarządzania i
+konwersji kluczy uwierzytelniania dla ssh. SSH-keygen przechowuje
+klucz prywatny w $HOME/.ssh/id_rsa i klucz publiczny w $
+HOME/.ssh/id_rsa.pub w katalogu domowym użytkownika:
+</p>
+
+<pre>
+ssh-keygen
+</pre>
+<p>
+SSH-copy-id
+kopiuje klucze tożsamości w odpowiednim formacie, zapewnia uprawnienia
+do plików i prawa własności oraz zapewnia, że klucz prywatny nie jest
+przypadkowo skopiowany.
+</p>
+
+<pre>
+ssh-copy-id -i ~/.ssh/id_rsa.pub marcin@zdalnyhost  
+rsync -avzP -e "ssh" user@host:/path/wp-content/* /path/wp-backup/
+</pre>
+
+<!-- rsync -avzP -e "ssh" danmarszal@danmarszal.nazwa.pl:/home/danmarszal/ftp/wp-content/* /home/tomek/Media/backup-violet/MiscStuff/DMarszal/ -->
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

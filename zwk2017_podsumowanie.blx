@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Żuławy wKoło 2017 -- podsumowanie</title>
+<!-- Tags: rowery,inne,r-->
+</head><body><!-- ##Published : 2017-09-28T03:12:05CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-0.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-0.jpg'/>
+ </a>
+ <br/>
+  <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-1.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-1.jpg'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-2.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-2.jpg'/>
+ </a>
+ <br/>
+</div>
+
+<p>Podsumowanie wyników dla lat 2015--2017</p>
+
+<pre>
+z16 &lt;- read.csv("wyniki_zulawy_2016_D.csv", sep = ';',  header=T, na.string="NA", dec=",");
+aggregate (z16$time, list(Numer = z16$dist), summary)
+z16$year &lt;- 2016;
+
+z15 &lt;- read.csv("wyniki_zulawy_2015_D.csv", sep = ';',  header=T, na.string="NA", dec=",");
+aggregate (z15$time, list(Numer = z15$dist), summary)
+z15$year &lt;- 2015;
+
+z17 &lt;- read.csv("wyniki_zulawy_2017_D.csv", sep = ';',  header=T, na.string="NA", dec=".");
+aggregate (z17$time, list(Numer = z17$dist), summary)
+z17$year &lt;- 2017;
+
+zz15 &lt;- z15[, c("dist", "kmH", "time", "year")];
+zz16 &lt;- z16[, c("dist", "kmH", "time", "year")];
+zz17  &lt;- z17[, c("dist", "kmH", "time", "year")];
+
+zz &lt;- rbind (zz15, zz16, zz17);
+
+## tylko dystans 140
+zz140 &lt;- subset (zz, ( dist == 140 ));
+sum140 &lt;- aggregate (zz140$kmH, list(Numer = zz140$year), summary)
+
+boxplot (kmH ~ year, zz140, ylab = "Śr.prędkość [kmh]", col = "yellow", main="140km" )
+
+## tylko dystans 55
+zz75 &lt;- subset (zz, ( dist > 60 &amp; dist &lt; 90 ));
+sum75 &lt;- aggregate (zz75$kmH, list(Numer = zz75$year), summary)
+sum75
+boxplot (kmH ~ year, zz75, ylab = "Śr.prędkość [kmh]", col = "yellow", main="80/75km" )
+
+## tylko dystans 55
+zz55 &lt;- subset (zz, ( dist &lt; 60 ));
+sum55 &lt;- aggregate (zz55$kmH, list(Numer = zz55$year), summary)
+sum55
+xl &lt;- paste ("średnie 2015=", sum55$x[1,4], "kmh   2016=",
+  sum55$x[2,4], "kmh   2017=", sum55$x[3,4], " kmh")
+
+  boxplot (kmH ~ year, zz55, xlab = xl,
+  ylab = "Śr.prędkość [kmh]", col = "yellow", main="55km" )
+</pre>
+
+<p>A ja (numer 418) byłem 70 w kategorii 140 km,
+z czasem 5:42:03
+co dało 24,56 kmh przeciętną. Do pierwszego bufetu się spinałem, potem już nie...
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

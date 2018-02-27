@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title></title>
+<!-- Tags: -->
+</head><body>
+
+<!-- &#x2192; rightarrow, &#x2190 leftarrow, &#8629; downwardarrow, &#8595; downarrow -->
+<!--<div style='float : right'>
+ <a href=''>
+ <img width='180px' longdesc='[[' alt=''
+   src=''/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>???</em>
+ <br/>
+</div>
+<p><strong>Dopisane 19 marca 2008</strong>:-->
+<p></p>
+<pre>
+
+</pre>
+
+<pre>
+$ google blogger post --tags "GoogleCL, awesome" --title "Test Post" --src "I'm posting from the command line"
+Please specify user: looseheadprop1 &lt;Enter>
+Please specify blog:&lt;Enter>
+## Copy/paste wyświetlony URL do przeglądarki
+Please log in and/or grant access via your browser at https://www.google.com/accounts/OAuthAuthorizeToken?###### then hit enter.
+Post created: http://pinkaccordions.blogspot.com/2011/10/test-post.html
+</pre>
+
+<!-- http://datacharmer.blogspot.com/2010/06/welcome-googlecl.html 
+     http://blog.ideabulbs.com/2011/10/howto-publishing-to-blogger-from-emacs.html
+     http://emacspeak.sourceforge.net/raman/
+     http://lifehacker.com/5567258/googlecl-brings-google-services-to-the-command-line
+-->
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->
