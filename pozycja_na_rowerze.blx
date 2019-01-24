@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Uwagi na temat pozycji na rowerze</title>
+<!-- Tags: rower,inne-->
+</head><body><!-- ##Published : 2018-04-22T14:54:18CEST ##-->
+
+<p>
+Moim zdaniem na problem w plecach generalnie pomaga skrócenie zasiegu,
+tj odległości od siodła do kierownicy. Ja (192cm/względnie krótkie
+nogi/długi tułów) mam tą odległość równa 55--6cm, liczone od czubka
+siodła do środka kierownicy.  Różnica siodlo--kierownica circa 7 cm.
+</p>
+<p>
+Żeby skrócić pozycję można:
+</p>
+
+<p>
+  1. Zmienić mostek na krótszy i o większym wzniosie i/lub zamontować
+  go w pozycji odwrotnej. Mostki mają typowo wznios plus/minus 8--10°
+  (stopni).  Zakłada się je w pozycji minus, ale ponieważ rura sterowa
+  ma nachylenie 73 stopnie, to 90° - 73° - 8° = 9° stopni wzniosu.  Jeżeli
+  mostek się przekręci to będzie 90° - 73° + 8° = 25° (czyli dużo więcej).
+</p>
+<p>
+  
+  <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/stem_flip.jpg'>
+    <img width='60%' longdesc='[[' alt=''
+	 src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/stem_flip.jpg'/>
+  </a>
+</p>
+<p>
+</p>
+<p>
+Subtelny problem: czy lepiej zmienić np 12cm na 8cm bez odwrócenia
+mostka czy 12cm odwrócić?  Oczywiście krótszy mostek będzie bliżej
+siodła ale kierownica będzie niżej, dłuższy oddala kierownicę ale
+będzie ona wyżej. Moje doświadczenia są takie że lepiej mieć mniejszą
+różnicę siodło-kiera czyli lepszy będzie 12cm odwrócony
+</p>
+<p>
+ 2. Zmienić kierownicę na kompaktową. Kierownice mają różne gięcie,
+ które charakteryzują dwa parametry zasięg (reach) oraz głębokość
+ (depth). Im większy zasięg tym większa odległość do klamek, im
+ większa głębokość tym trzeba się bardziej zgiąć w dolnym chwycie.
+</p>
+<p>
+
+      <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/handlebars_r.jpg'>
+	<img width='60%' longdesc='[[' alt=''
+	     src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/handlebars_r.jpg'/>
+	</a><br/><span style='font-size: 80%'>
+	Rys. 2. Kompakt jest po lewej jak się łatwo domyśleć</span>
+</p>
+<p>
+3. Podsunąć siodło maksymalnie w stronę kierownicy bez przejmowania się o
+pozycję wzg pedałów (ja tak zrobiłem w swoim rowerze).
+</p>
+<p>
+4. Zmienić sztycę (wspornik siodła) na zero offsetową. Większość sztycę ma offset
+w stronę tylnego koła:
+</p>
+<p>
+      <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/zero_offset_post_r.jpg'>
+	<img width='50%' longdesc='[[' alt=''
+	     src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/zero_offset_post_r.jpg'/>
+	</a> <br/>
+	<span style='font-size: 80%'>
+      Rys. 3. Zero offetowa sztyca jest po prawej jak się łatwo domyśleć (na sztycy po lewej strzałką zaznaczono offset)
+	</span>
+</p>
+<p>
+Ja mam mostek 12cm odwrócony (10°) + zero offsetową sztycę
+i kierownicę FSA compact (reach: 80mm/depth): 125 mm).
+FSA to nazwa firmy produkującej BTW.
+</p>
+<!-- http://leancrew.com/all-this/2009/04/derotating-jpegs-with-exiftool/ -->
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

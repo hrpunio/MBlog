@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Google Maps API przestało działać</title>
+<!-- Tags: gmaps,google,mapquest,geocoding-->
+</head><body><!-- ##Published : 2018-09-07T01:17:16CEST ##-->
+
+<p>Bo zmieniła się licencja na korzystanie (z Google Maps API):</p>
+
+<p><em>
+Google has made significant changes to the way they allow the use of
+their Google Maps Platform. Google maintains its Google Map API will
+still be free to a certain limit and it provides free $200 monthly
+recurring credit to every user.
+Google requires all user to have a billing account. They must be
+willing to submit credit card details, so excess is charged pro rata.
+</em></p>
+
+<p>Więcej jest <a
+href='https://cloud.google.com/maps-platform/user-guide/pricing-changes/'>tutaj</a>.</p>
+
+<p>W rezultacie tych zmian na mapach Google, które wykorzystują
+poprzez API (konkretnie korzystają z Maps JS API) pojawiło się
+okienko z komunikatem
+<strong>Ta strona nie może poprawnie wczytać Map Google</strong>.
+Sama wyświetlona mapa jest zaś na szaro i ma powtórzony znak wodny <strong>For
+development purposes only</strong>.</p>
+<p>
+No kicha niewątpliwie. Na razie nie wiem co robić, bo rejestrować
+kartę do moich hobbystycznych projektów
+to mi się nie chce. Rozważam wykorzystanie czegoś w zamian.
+</p>
+
+<p>Oprócz Google Maps JS API korzystałem też z Google Geocoding API. No i ta usługa też
+przestała działać: OVER_QUERY_LIMIT dostaję w odpowiedzi.
+Tutaj też rozważam wykorzystanie czegoś w zamian, a nawet rozważyłem
+i spróbowałem: darmowy serwis MapQuest. BTW nie wiemy czy to jest
+najlepszy zamiennik ale spróbować trzeba.
+</p>
+<p>Piszą (cf. <code>https://developer.mapquest.com/documentation/open/geocoding-api/</code>), że:
+<em>The Open Geocoding API is similar
+to our MapQuest Geocoding API, but instead relies solely
+on data contributed to OpenStreetMap.</em>
+Zapytania mogą mieć postać metod <code>GET</code> lub <code>POST</code>.
+Jest jeszcze coś co się nazywa <code>Batch Geocode</code>, które to coś
+pozwala na geokodowania do 100 adresów na raz.
+Szczegółowa dokumentacja jest
+<a href='https://developer.mapquest.com/documentation/open/geocoding-api/address/get/'>tutaj</a>.
+</p>
+<p>Posługując się metodą GET korzysta się bardzo prosto:
+</p>
+<pre>
+http://open.mapquestapi.com/geocoding/v1/address?key=APIKEY&amp;location=ADDRESS
+</pre>
+<p>Użyteczne parametry:
+<code>boundingBox=UppLLat,UppLLon,LowRLat,LowRLon</code> (górny lewy/dolny prawy),
+<code>maxResults</code>,
+<code>outFormat</code> (json,xml albo csv). 
+</p>
+<p>Przykłady:</p>
+<pre>
+http://open.mapquestapi.com/geocoding/v1/address?key=KLUCZ&amp;location=Sopot,PL&amp;maxResults=10
+## BB województwa pomorskiego 54.83572969999 19.6489837 53.49067179999999 16.699129
+http://open.mapquestapi.com/geocoding/v1/address?key=KLUCZ&amp;location=Sopot,PL&amp;\
+  boundingBox=54.835729,19.648983,53.490671,16.699129
+</pre>
+<p>Żeby było łatwiej powyższe zaimplementowałem
+w prostym skrypcie Perlowym:
+</p>
+
+<pre>
+#!/usr/bin/perl
+#
+use strict;
+use LWP::Simple; # from CPAN
+use JSON qw( decode_json ); # from CPAN
+use Getopt::Long;
+#use Encode;
+
+use utf8;
+binmode(STDOUT, ":utf8");
+
+my $format = "json"; # xml  | csv (not implemented)
+my $myAPIkey = 'APIKEY'; ## Klucz od MapQuesta (trzeba się zarejestrować)
+my $geocodeapi = "http://open.mapquestapi.com/geocoding/v1/address?key=$myAPIkey&amp;location=";
+my $addrLine = '';
+my $logFile = '';
+my $boundingBox = '';
+my $country = 'PL';
+my $maxResults = 1; ## podaj tylko pierwszy
+
+my $USAGE="USAGE: $0 [-a ADDRESS] [-log FILENAME] [-country CODE] [-bb SWlat,SWlng|NElat,NElng] \n";
+
+GetOptions( "a=s" => \$addrLine, "log=s" => \$logFile, "country=s" => \$country, 
+    "bb=s" => \$boundingBox,  "max=i" => \$maxResults ) ;
+
+if ($logFile) { open LOG, ">>$logFile" || die "Cannot log to $logFile\n" ;
+ print STDERR "*** Logging JSON to $logFile ***\n" ; } else {
+ print STDERR "*** Logging JSON OFF ***\n"; }
+
+unless ($addrLine ) { print STDERR "$USAGE"; exit 0; }
+
+my ($lat, $lng, $quality, $lname) = getLatLong($addrLine, $boundingBox);
+
+printf "Lat/Lng/Name/Quality: %s %s %s %s\n", $lat, $lng, $lname, $quality;
+
+if ($logFile) { close (LOG) ; }
+
+### ### ### ### ### ### ### ###
+sub getLatLong($){
+  my $address = shift;
+  my $bb = shift;
+
+  my $url = $geocodeapi . "$address,$country" ; #
+  if ($boundingBox ) { $bb =~ s/[\|,]/,/g; $url .= "&amp;boundingBox=$bb" ; }
+  if ($maxResults ) { $url .= "&amp;maxResults=$maxResults" ; }
+
+  print STDERR "\n*** [URL: $url] ***\n";
+
+  my $json = get($url);
+  if ($logFile) { print LOG "##_comment_:\n##_comment_:$url\n$json\n"; }
+
+  my $d_json = decode_json( $json );
+
+  #if ( $d_json->{statuscode} eq '0' ) {
+  my $loc_name =  $d_json->{results}->[0]->{providedLocation}->{location};
+  my $lat = $d_json->{results}->[0]->{locations}->[0]->{latLng}->{lat};
+  my $lng = $d_json->{results}->[0]->{locations}->[0]->{latLng}->{lng};
+  my $quality = $d_json->{results}->[0]->{locations}->[0]->{geocodeQuality};
+
+  return ($lat, $lng, $quality, $loc_name );
+  #} else { return ( $d_json->{statuscode} ) }
+} ## ///
+</pre>
+<p>Teraz wystarczy na przykład:
+</p>
+<pre>
+geocodeCoder1.pl -a Sopot -bb 54.835729,19.648983,53.490671,16.6991
+</pre>
+<p/>
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

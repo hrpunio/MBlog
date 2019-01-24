@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wkurwiający problem kodowania UTF w Perlu</title>
+<!-- Tags: perl,utf8-->
+</head><body><!-- ##Published : 2018-09-18T01:45:27CEST ##-->
+
+<p>Z jakiś powodów obsługi przez Perla UTFa nie może być bezszmerowa.
+Zawsze coś nie działa i zawsze jest problem. I zawsze jest kombinowanie
+co by tu wstawić za zaklęcia żeby działało. Np. to zwykle działa:
+</p>
+<pre>
+#!/usb/bin/perl
+use locale;
+use utf8;
+binmode(STDOUT, ":utf8");
+##use open ":encoding(utf8)";
+use open IN => ":encoding(utf8)", OUT => ":utf8";
+</pre>
+
+<p>albo to poniżej też czasami działa (wtedy kiedy
+powyższe nie działa):</p>
+
+<pre>
+use utf8;
+binmode(STDOUT, ":utf8");
+use open ":encoding(utf8)";
+</pre>
+
+<p>Czasami nawet nie potrzeba ostatniego
+<code>use open ":encoding(utf8)";</code>. Czemu nie wiem. Nadmiarowe
+polecenia psują kodowanie BTW (jakby ktoś myślał, że jak wstawi wszystkie
+polecenia, które dotyczą kodowania UTF ,,na zapas'' to będzie zawsze dobrze.)
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

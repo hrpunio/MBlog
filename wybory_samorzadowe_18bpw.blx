@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory wójtów/burmistrzów/prezydentów</title>
+<!-- Tags: wybory,r,inne,polityka-->
+</head><body><!-- ##Published : 2018-10-18T16:17:41CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/gminy_agg_kandydaci3-4.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/gminy_agg_kandydaci3-4.jpg'/>
+ </a>
+</div>
+
+<p>Analiza eksploracyjna wyborów wójtów/burmistrzów/prezydentów.
+W PL wybiera się radnych w wyborach do rad powiatów/rad gmin
+(oba ciała IMO zbędne), radnych sejmików wojewódzkich oraz
+uwaga: wójtów/burmistrzów/prezydentów (WBP) na poziomie gmin.
+O ile wybory sejmików kierują się tym samym
+mechanizmem co wybory sejmowe to wybory WBP są
+większościowe -- każdy może wystartować i wygrać. Do tego taki WBP ma dużą władzę
+więc warto być WBP. Takich wyborów
+w PL jest 2477 -- tyle ile gmin. W zależności od statusu gminy w jednych
+wybiera się wójta a w innych prezydenta czy burmistrza. Mówiąc konkretnie
+wójtów jest 1547, burmistrzów 823 a prezydentów 107.
+Poniższa tabela zestawia dane dotyczące kandydatów w wyborach 2018/2014/2010
+</p>
+<pre>
+  Rok      N   1KN   1K%   2KN   2K%   >4N    >4%     śr
+  ------------------------------------------------------
+  2018  6965   329  13,30  849  34,30  262  10,58   2,81
+  2014  8019   245   9,90  666  26,90  471  19,00   3,25
+  2010  7776   303  12,20  683  27.57  430  17,36   3,14
+</pre>
+<p>Jak na moje to kandydatów za dużo to się nie zgłasza, do tego
+(w tym roku/w tych wyborach) w 13,30% gmin jest jeden,
+a w 34,30% dwóch (co daje co najwyżej dwóch
+w prawie połowie wyborów WBP).
+Do tego tendencja jest jakby nie w tę stronę
+co trzeba: mniej kandydatów ogółem,
+więcej gmin z małą liczbą kandydatów, mniej gmin z dużą liczbą kandydatów.
+Można podsumować że demokracja na lokalnym poziomie słabnie...
+</p>
+<p>Ilustruje to wykres krzywych gęstości liczby kandydatów na urząd WBP
+(dla każdego roku oddzielna krzywa).
+</p>
+<pre>
+## ramka g ma następującą strukturę: razem;teryt;rok
+g$r &lt;- as.factor(g$rok)
+p &lt;- ggplot(g, aes(x=razem, color=r)) + geom_density() +
+labs(title="Krzywa gęstości liczby kandydatów na urząd wójta/burmistrza/prezydenta",
+x="Liczba kandydatów", 
+y = "Gęstość", color="Rok")
+</pre>
+<p>Dane są
+<a href='https://github.com/hrpunio/Data/tree/master/ws2018'>tutaj</a></p>
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

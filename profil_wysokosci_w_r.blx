@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Rysowanie profilu wysokości w R</title>
+<!-- Tags: r,turystyka,inne-->
+</head><body><!-- ##Published : 2018-08-31T01:47:39CEST ##-->
+
+<p>Ze śladu GPX prostym skryptem wyciągam co trzeba tworząc
+plik CSV o następującej zawartości (nazwy kolumn: data-czas,wysokość,prędkość,dystans przebyty):</p>
+<pre>
+daytime;ele;speed;dist  
+</pre>
+<p>
+Teraz poniższym skryptem rysuję profile wysokości (wysokość/prędkość vs czas
+oraz wysokość/prędkość vs dystans)
+</p>
+<pre>
+library(reshape)
+require(ggplot2)
+
+graphWd &lt;- 6
+graphHt &lt;- 5
+
+args = commandArgs(trailingOnly = TRUE);
+
+if (length(args)==0) { stop("Podaj nazwę pliku CSV", call.=FALSE) }
+
+fileBase &lt;- gsub(".csv", "", args[1]);
+outFile1 &lt;- paste (fileBase, "_1.pdf", sep = "");
+outFile2 &lt;- paste (fileBase, "_2.pdf", sep = "");
+
+what &lt;- args[2];
+
+# http://stackoverflow.com/questions/7381455/filtering-a-data-frame-by-values-in-a-column
+d &lt;- read.csv(args[1], sep = ';',  header=T, na.string="NA");
+coeff &lt;- median(d$ele)/median(d$speed)
+d$speed &lt;- d$speed * coeff
+
+
+p1 &lt;- ggplot(d, aes(x = as.POSIXct(daytime, format="%Y-%m-%dT%H:%M:%SZ"))) +
+  geom_line(aes(y = ele, colour = 'wysokość', group = 1), size=1.5) +
+  geom_line(aes(y = speed, colour = 'prędkość', group = 1), size=.5) +
+  stat_smooth(aes(y=speed, x=as.POSIXct(daytime, format="%Y-%m-%dT%H:%M:%SZ"), colour ='prędkość wygładzona')) +
+  ylab(label="Wysokość [mnpm]") +
+  xlab(label="czas") +
+  scale_y_continuous( sec.axis = sec_axis(name="Prędkość [kmh]",  ~./ coeff)) +
+  labs(colour = paste( what )) +
+  theme(legend.position="top") +
+  theme(legend.text=element_text(size=12));
+p1
+ggsave(file=outFile1, width=graphWd, height=graphHt )
+
+p2 &lt;- ggplot(d, aes(x = dist)) +
+  geom_line(aes(y = ele, colour = 'wysokość', group = 1), size=1.5) +
+  geom_line(aes(y = speed, colour = 'prędkość', group = 1), size=.5) +
+  ##geom_smooth() +
+  stat_smooth(aes(y=speed, x=dist, colour ='prędkość wygładzona')) +
+  ylab(label="Wysokość [mnpm]") +
+  xlab(label="dystans") +
+  scale_y_continuous( sec.axis = sec_axis(name="Prędkość [kmh]",  ~./ coeff)) +
+  labs(colour = paste( what )) +
+  theme(legend.position="top") +
+  theme(legend.text=element_text(size=12));
+p2
+
+ps &lt;- stat_smooth(aes(y=speed, x=dist));
+
+ggsave(file=outFile2, width=graphWd, height=graphHt )
+</pre>
+
+<p>Teraz na koniec ciekawostka. Mój smartfon produkuje pliki GPX z superdokładnym
+stemplem czasu np. <code>2018-08-23T04:52:43.168Z</code>, na czym wysypuje
+się R. Po prostu usuwam część
+po kropce dziesiętnej oraz samą kropkę (tj. <code>.168Z</code>) i działa.
+</p>
+
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

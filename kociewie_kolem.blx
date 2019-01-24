@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Przygotowania do Kociewie Kołem</title>
+<!-- Tags: kociewie kołem,rowery,cycling,inne,perl,google-->
+</head><body><!-- ##Published : 2018-09-07T01:17:16CEST ##--><!-- ##Published : 2018-09-09T17:45:43CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-0.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK2015-17-0.jpg'/>
+ </a>
+ <br/>
+  <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kociewie-kolem-profesor_2016-17.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kociewie-kolem-profesor_2016-17.jpg'/>
+ </a>
+ <br/>
+</div>
+
+<p>W zeszłym roku wziąłem udział w imprezie kolarsko-rekreacyjnej pn. <em>Żuławy w Koło</em>,
+a teraz zapisałem się na <a href='http://kociewiekolem.pl/'>Kociewie Kołem</a>, która
+ma się odbyć 9 września.
+Ta sama firma organizuje jak się łatwo domyśleć.</p>
+<p>Żeby nie jechać w ciemno pobrałem stosowne dane ze strony organizatora, zamieniłem je na
+plik CSV i policzyłem różne statystyki.
+W 2016 średnia prędkość na najdłuższym dystancie (170 km)
+wyniosła na przykład 27,05 km/h. Rok później (dystans 155 km) było to 26,69 km/h.
+Czyli sporo, bo na płaskiej i krótszej trasie <em>Żuławy w Koło</em> było dla przykładu
+w 2016 roku 25,47 km/h, a w 2017 26,23 km/h. Więcej szczegółów na wykresach pudełkowych obok.
+</p>
+
+<p>Ściągnąłem też w środę listę uczestników, których okazało się jest 719, w tym
+z Gdańska 332, z Gdyni 107, a tak w ogóle to ze 120 różnych miejscowości.
+Za pomocą Google Fusion Tables
+można pokazać listę na mapie. Żeby kropki z tej samej miejscowości się nie nakładały na siebie
+zastosowałem losowe `drganie' (jitter) wg. algorytmu:
+</p>
+<pre>
+### Jitter w kole o średnicy $r
+$factorJ = 0.00001; ## ustalone heurystycznie
+
+$sd = sqrt($factorJ * $N); # $N liczba kropek dla miejscowosci, tj dla GDA 332
+$r = $sd * sqrt(rand()); $theta = rand() * 2 * $pi;
+$rand_lat = $lat + $r * cos($theta);
+$rand_lon = $lon + $r * sin($theta);
+
+### Jitter w prostokącie o boku $r
+$rand_lat = $lat + rand($sd);
+$rand_lon = $lon + rand($sd);
+</pre>
+
+<p>
+  Rezultat jak na obrazku poniżej, albo  <a href='https://www.google.com/fusiontables/DataSource?docid=1J4CjT4XP8FuIG3GjX03Ov00UIrLF9UI73XPrHTj3'>tutaj</a>.
+</p>
+
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jitter-demo.png'>
+ <img width='30%' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jitter-demo.png'/>
+ </a>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jitter-demo1.png'>
+ <img width='30%' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/jitter-demo1.png'/>
+ </a>
+</div>
+<p>
+ Lewy obrazek to mapa bez `jittera' a prawy z zastosowanym `jitterem'.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

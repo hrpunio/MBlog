@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Krój Chiller</title>
+<!-- Tags: chiller,chillerPL,fonty-->
+</head><body><!-- ##Published : 2018-03-16T04:37:44CEST ##-->
+
+<p>Plakat studentka do koncertu małżonki zrobiła
+wykorzystując do tego font pn Chiller. Font typu pisanka, wyróżnia się
+oryginalnym kształtem `I', do pobrania
+z <a href='https://fontzone.net/font-download/chiller'>fontzone.net</a>
+(legalności nie badałem).
+Font nie ma polskich znaków co skutkowało m.in że w literze `ł'
+na przecięciu `l' oraz dostawionej kreski ukośnej
+się zrobiło czarno (być może da się zrobić w PhotoShopie `ł' lepiej, bo
+tak jak zostało zrobione, to ewidentnie wygląda, że jak dwa razy machniesz na brązowo, to masz bardziej brązowo
+niż jak machniesz raz).
+No a inne diakrytki a zwłaszcza `ą' czy `ę', to już w ogóle słabo...
+chociaż ogonek w zestawie gotowy jest.
+</p>
+
+<p>
+No więc dorobiłem polskie diakrytyki (bo to pisanka to się odważyłem),
+a nawet kilkadziesiąt innych diakrytyków oraz cyfry nautyczne (bo je
+lubię używać). Polskie i litewskie są zrobione szczególnie starannie
+w tym sensie że nie nakładałem krzywych, tylko usunąłem nachodzące na
+siebie obszary, tworząc jedną obwiednię.
+</p>
+<p>
+Wszystko to za pomocą fontforge. Super program muszę przyznać.
+ChillerPL jest <a
+href='https://github.com/hrpunio/FontProjects'>tutaj</a>.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Jak zacząłem pracę z TeXem</title>
+<!-- Tags: inne,tex-->
+</head><body><!-- ##Published : 2018-03-19T16:24:46CEST ##-->
+
+<p>Przypadek wielokrotny zadecydował.</p>
+
+<p>Studia skończyłem w roku 1987r.
+W tym czasie po studiach szło się do wojska na 1 rok.
+Mając do wyboru pobór we wrześniu 1987 albo w styczniu 1988 albo w maju 1988
+zdecydowałem się na maj. Kombinowałem oczywiście żeby nie iść, ale
+słabo i się nie wykręciłem. Tym bardziej że tuż przed końcem PRLu przykręcono
+śrubę na odcinku obronności i brano bez litości wszystkich, nawet tych
+z kategorią C i papierami o depresji czy dyskopatii (z tymi to był
+kabaret zresztą na przykład na strzelnicę taki dyskopatyk jechał a nie szedł -- ciężarów
+nie mógł przecież dźwigać, a karabin jest ciężki). Wracając do TeXa -- wygrałem los po raz pierwszy:
+bym poszedł w styczniu/wrześniu (lub wcale) nie poznałbym TeXa (raczej)...
+</p>
+
+<p>
+Wróciłem do pracy na Uniwersytecie w maju 1989 (dla przypomnienia w czerwcu 1989
+był okrągły stół). Kompletna zmiana sytuacji, jeszcze w sierpniu 1988
+jak rozpoczął się strajk w Stoczni (22 sierpnia), a ja udawałem Marine (aka niebieskiego bereta)
+w czymś co się nazywało 7 Pomorska
+Brygada Obrony Wybrzeża (35 pułk desantowy, Gdańsk-Wrzeszcz, ul. Słowackiego -- teraz osiedle Garnizon),
+to ktoś wpadł na pomysł
+wysyłania patroli wojskowych na miasto z bronią, ale bez amunicji, w składzie
+żołnierze służby zasadniczej + dowódca podchorąży (czyli m.in. ja).
+Oficer dyżurny: <em>Tylko k#rwa podchorąży pamiętajcie, jak tylko coś się zacznie, to wy od razu
+macie spierdalać z powrotem do koszar...</em>
+Wychodzi na to, że los po raz drugi się uśmiechnął, że to poszło
+w tą stronę co
+poszło, bo były obawy, że my w tym 35 pułku (desantowym) posiedzimy dłużej.
+</p>
+<p>
+Jakoś tak po roku, czyli w 1990, ktoś mi powiedział, że dla
+pracowników Uniwersytetu organizuje  kursy języka angielskiego
+firmowane przez <em>British Council</em>. No to się zapisałem.
+</p>
+
+<p>Kursy to (dla wygody kursantów?) były tak organizowane, że grupy
+tworzono ,,według wydziałów'', tj. zapisywano wszystkich z wydziału
+do jednej grupy. Oczywiście ktoś tam zawsze był nadmiarowy. Ja trafiłem
+do grupy ,,nadmiarowej''.
+Wygrałem los po raz trzeci
+-- bym trafił do grupy ,,wydziałowej'', to bym się kisił w starym sosie,  w towarzystwie
+znanym z wydziału (dlatego ten system tworzenia grup był moim zdaniem mało sensowny). Nb wygrałem
+też tam inny los: poznałem przyszłą małżonkę (z Akademii Muzycznej)
+</p>
+
+<p>
+Oprócz małżonki poznałem też Tomasz Janowskiego (dalej TJ) z wydziału Mat-Fiz. Ja
+pracowałem w katedrze statystyki (tyle, że nie na matematyce tylko na
+zarządzaniu) a wspólnym problemem był skład wzorów matematycznych, do
+czego używało się wtedy edytora pn. Chi-Writer. Nie tylko
+Chi-Writera  miał polskie znaczki, ale ktoś dorobił także w miarę
+obszerny zestaw symboli matematycznych. Wzory się tworzyło za pomocą prymitywnego bo prymitywnego
+ale edytora równań byśmy to dziś nazwali.
+Wynik niewiele się różnił od tego co dawała maszyna
+do pisania, tyle że przynajmniej nie trzeba było używać długopisu do
+dopisywania.  A znasz taki program TeX? -- pyta TJ
+Pierwsze słyszę -- odpowiadam.
+Ten TeX to ma czcionki jak z drukarni (to było wtedy ważne) -- zareklamował go TJ.
+</p>
+
+<p>
+Potem się okazało, że TJ poznał TeXa od Włodka Bzyla. Ale to
+było potem.  Na razie dał mi TeXbooka, którego skserowałem.  Szybko
+się okazało, że coś jest z tym TeXem nie-halo.  Jak w nim składać
+polskie teksty? TJ -- no z tym jest problem, my tu używamy
+ogonek.sty (czy jakoś tak--zestaw makr doklejających grecką jotę pod `a'
+i `e').  Gdzieś w tych okolicach czasowych dowiedziałem się też co to jest LaTeX
+oraz zdobyłem kopię podręcznika Lamporta.
+</p>
+
+<p>Jakiego pierwszego TeXa dostałem od TJ to już nie pamiętam. Była to o tyle niekompletna
+dystrybucja, że nie miała MetaFonta.
+Tylko TeX, program do drukowania/oglądania na ekranie i zestaw fontów
+na jakąś tam typową drukarkę. Używałem go dość krótko,
+bo szybko zmieniłem na emTeXa. EmTeX był o tyle lepszy, że był kompletny,
+-- miał MetaFonta. Można było w szczególności generować fonty bitmapowe na różne rozdzielczości,
+a nie tylko drukować tym co się dostało `z fabryki'.
+To wszystko działało na komputerze PC-AT (w pracy, swojego PC-TA jeszcze się nie dorobiłem)
+wyposażonym w DOSa w wersji 3.3 zapewne. To że w ogóle na wydziale był taki nowoczesny komputer
+było nawiasem mówiąc w dużym stopniu zasługą dr. Mirosława Gronickiego (późniejszego ministra finansów)
+a wtedy (i pewnie później) entuzjastę nowych rozwiązań, tak to nazwijmy.
+Z tego co mi się wydaje
+3 komputery w katedrze statystyki z PC-AT na czele, to była cała flota PC-towa na wydziale
+(nie licząc czegoś tam co
+mieli w (,,specjalistycznej'') katedrze OPD (Organizacji Przetwarzania Danych jakby ktoś się
+pytał-- później przemianowanej na Katedrę Informatyki Ekonomicznej).)
+Inni liczyli na kalkulatorach albo w ostateczności
+korzystali z wątpliwej jakości usług Ośrodka Obliczeniowego (Odra coś-tam-coś tam).
+Oczywiście uruchomienie
+TeXa na nie swojej Odrze nie wchodziło w grę.
+</p>
+
+<p>W tym czasie w prasie pojawiały się ogłoszenia firmy pn Polski TeX spółka z o.o.
+sprzedającej polskiego TeXa pn. MeX/LaMeX (polski LaTeX)
+za dość znaczną kwotę. Ten TeX miał mieć dobrej jakości polskie znaki. Kwota
+było jednak na tyle znacząca, że na kupno się nie zdecydowałem,
+ale też nie skopiowałem go nielegalnie (naprawdę). TJ przyznał się,
+że w instytucie matematyki mają licencjonowaną kopię tego `komercyjnego' TeXa.
+Doczytałem w TeXbooku o MetaFoncie, więc skserowałem MFbooka od TJ.
+Dorobiłem kulfoniaste ogonki sam, a nawet w ramach samorozwoju
+znaki do diagramów szachowych.
+</p>
+
+<p>
+W końcu, jak już coś tam wiedziałem, no i miałem te diagramy,
+a dzięki
+temu nadzieję, że nie wyjdę na naciągacza-żebraka co to przyszedł dupę
+zawracać, to się odważyłem i poszedłem rozpoznawczo do tego
+Polskiego TeXa z o.o (Sopot, 3 Maja ileś tam -- w biurze Polskich Młynów, teraz są
+tam apartamenty).
+W firmie siedział Piotr Pianowski. Pogadaliśmy. Ja
+się pochwaliłem diagramami--Piotr wyraził zainteresowanie. Powiedział,
+że dałby mi tego TeXa, ale wkrótce go upublicznią więc radzi żebym się
+wstrzymał z bólami parę dni/tygodni.  Potem
+przyszedł jeszcze Staszek Wawrykiewicz.  Bogusława Jackowskiego -- chyba wtedy
+w firmie nie było. Poznałem go później...
+</p>
+
+<p>Wizyta w Polskim TeXu  musiała być jakoś tak jesienią 1991. Następnego
+roku w czerwcu odbyło się walne zebranie GUSTu w Warszawie, na które
+pojechałem. Nikogo tam prawie nie znałem i niewiele
+z tego zebrania pamiętam, oprócz tego że pierwszy i jedyny raz zobaczyłem
+Romana Tomaszewskiego (reklamowanego m.in. jako konsultant ds diakrytyków
+w projekcie Polski TeX/MeX). TeX mnie wciągnął,
+w roku 1993 pojechałem do Bachotka na pierwszą konferencję GUSTu,
+a już rok później
+z kolegą Bzylem współorganizowaliśmy konferencję Europejską w Gdańsku,
+a konkretnie na wyspie Sobieszewskiej. Ponieważ konferencja była za miastem
+tośmy wymyślili, że oznaczymy drogę do ośrodka Orle (istnieje do dziś)
+za pomocą kilku porządnie namalowanych na desce drogowskazów.
+I tu wpadka, bo się okazało że
+drogowskaz jest albo w prawo albo w lewo, a myśmy o tym nie pomyśleli.
+Nasze były tylko w prawo, więc wszystkie próby powieszenia go
+tak aby wskazywał skręt w lewo okazały się daremne.
+Ostatecznie powiesiliśmy go do góry
+nogami, żeby chociaż strzałka wskazywała prawidłowy kierunek.
+<em>Expirience is the best teacher</em> -- ten incydent pamiętam od dziś!
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

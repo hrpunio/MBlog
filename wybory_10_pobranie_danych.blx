@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Pobranie danych z wyborów samorządowych 2010</title>
+<!-- Tags: inne,polityka,wybory,perl-->
+</head><body><!-- ##Published : 2018-10-03T02:44:44CEST ##-->
+
+<p>Co wybory to inaczej oczywiście...</p>
+<p>Wyniki wyborów 2010 są na stronie <code>http://wybory2010.pkw.gov.pl/</code>.
+Punktem wyjścia jest zaś strona z wynikami dla województwa
+postaci
+<code>http://wybory2010.pkw.gov.pl/geo/pl/020000/020000-o-020000-RDA-2.html?wyniki=1</code>,
+w której wiodące <code>02</code> z <code>020000</code>
+to kod teryt województwa a <code>2</code> przed <code>.html</code>
+to numer okręgu wyborczego. Zatem pobranie wszystkich stron
+`okręgowych' sprowadza się do:
+</p>
+<pre>
+#!/usr/bin/perl
+#
+use LWP::Simple;
+#
+my $uribase = 'http://wybory2010.pkw.gov.pl/geo/pl';
+@Woj = ("02", "04", "06", "08", "10", "12", "14", "16",
+  "18", "20", "22", "24", "26", "28", "30", "32");
+@Okr = (1,2,3,4,5,6,7,8,9,10); ## nadmiarowo (max jest 8 chyba)
+
+for $w (@Woj) {
+  for $o (@Okr) {
+    $url = "$uribase/${w}0000/${w}0000-o-${w}0000-RDA-${o}.html?wyniki=1";
+    $file = "ws2010_woj_${w}_${o}";
+    getstore($url, $file);
+    print STDERR "$url stored\n";
+  }
+}
+</pre>
+<p>Teraz się okazuje że każdy taki plik zawiera odnośniki
+postaci <code>/owk/pl/020000/2c9682212bcdb46c012bcea96efe0131.html</code>.
+Każdy taki plik opisuje kandydata startującego w wyborach.
+Ich pobranie jest równie banalne:
+</p>
+<pre>
+#!/usr/bin/perl
+#
+use LWP::Simple;
+use locale;
+use utf8;
+binmode(STDOUT, ":utf8");
+use open IN => ":encoding(utf8)", OUT => ":utf8";
+
+$baseURI="http://wybory2010.pkw.gov.pl";
+$file = $ARGV[0];
+
+while (&lt;>) {
+  chomp();
+  if (/(owk\/[^&lt;>"]*)/) {
+     $url= "$baseURI/$1";
+     if (/(owk\/[^&lt;>"]*)[^&lt;>]*>([^&lt;>]*)/) {
+       $who = "$2"; $who =~ s/ //g;
+       $who =~ tr/ĄĆĘŁŃÓŚŻŹ/ACELNOSZZ/;
+       $who =~ tr/ąćęłńóśżź/acelnoszz/;
+     } else {$who = "XxYyZz"; }
+
+     $outFile = "owk_${file}__${who}";
+     getstore($url, $outFile);
+     print STDERR "$url stored ($outFile)\n";
+  }
+}
+## pobranie wszystkich owk-URLi to:
+## for i in ws2010_woj* ; do perl pobierz-owk.pl $i ; done
+</pre>
+<p>
+W plikach `owk' są linki do protokołów z wynikami z poszczególnych komisji.
+Są to linki postaci:
+<code>/obw/pl/3206/bacbedd03197794e2e1e8e438bff87e1.html</code>. Należy
+je wszystkie pobrać (URLe nie pliki) i posortować usuwając duplikaty.
+Powinno być takich URLi około 25--27 tysięcy (tyle ile komisji):
+</p>
+<pre>
+#!/usr/bin/perl
+#
+$baseURI="http://wybory2010.pkw.gov.pl";
+$file = $ARGV[0];
+
+while (&lt;>) {  chomp();
+  if (/(obw\/[^&lt;>"]*)/) {
+     $url= "$baseURI/$1";
+     if (/(obw\/[^&lt;>"]*)[^&lt;>]*>([^&lt;>]*)/) {
+         $obwNr = "$2"; }
+     $outFile = "${file};${obwNr}";
+     print "$url;$outFile\n";
+} }
+## for i in owk_2010* ; do perl pobierz-obw.pl $i ; done > proto0.csv
+## awk -F';' '{print $1";"$3}' proto0.csv | sort -u > protokoly.csv
+## wc -l protokoly.csv
+## 25464 protokoly.csv
+</pre>
+<p>Każdy URL jest postaci <code>/obw/pl/0201/051595429cc31a526f8b2455602ab929.html</code>.
+Te <code>0201</code> to pewnie teryt powiatu,
+ale reszta wydaje się losowa więc
+nie da się ustalić jakiegoś schematu URLi protokołów, bo go nie ma po prostu.
+Teraz postaje pobrać te 25464 plików-protokołów z komisji
+obwodowych. Na wszelki wypadek będę zapisywał te protokoły wg schematu:
+<code>proto_ws_2010_terytPowiatu_nrkomisji</code>:</p>
+<pre>
+#!/usr/bin/perl
+##
+use LWP::Simple;
+open (O, "protokoly.csv") || die "No protokoly.csv!";
+while (&lt;O>) { chomp();
+  ($url, $nrk) =  split /;/, $_;
+  $_ =~ m#http://wybory2010.pkw.gov.pl/obw/pl/([0-9][0-9][0-9][0-9])#;
+  $teryt = $1;
+  $outFile = "proto_ws_2010_${teryt}_$nrk";
+  getstore($url, $outFile);
+  print STDERR "*** $url stored ($outFile)\n";
+}
+close(O);
+## time perl get-proto.pl
+</pre>
+<p>Mi się ściągało 62 minuty 30 sekund.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

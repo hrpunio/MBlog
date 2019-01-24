@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Koniec pobierania danych wyborczych</title>
+<!-- Tags: polityka,inne,wybory,r-->
+</head><body><!-- ##Published : 2018-10-07T03:54:31CEST ##-->
+
+<p>Dobrnąłem w końcu do finału pobierając ostatecznie ze strony PKW dane dotyczące
+siedmiu wyborów, które odbyły się w latach:
+2015, 2014 (samorządowe), 2011, 2010 (samorządowe),
+2007, 2006 (samorządowe), 2005.</p>
+
+<p>Wyniki wcześniejszych wyborów nie są już dostępne na poziomie komisji
+obwodowych (a przynajmniej ja nie potrafię takowych odszukać).
+Protokoły  z wyborów z 2006 roku też nie były dostępne, ale udało się
+je w części odtworzyć ze stron z wynikami kandydatów (zawierającymi
+liczbę głosów oddanych
+na kandydata w poszczególnych komisjach obwodowych).
+</p>
+
+<p>Dla każdych wyborów wykreśliłem histogram poparcia dla mainstreamowych
+partii: PSL, PO, PiS oraz SLD.
+Zgodnie z oczekiwaniami rozkłady poparcia są jednomodalne, prawostronnie
+symetryczne, ale z dwoma wyjątkami: rozkład poparcia dla PO jest
+bimodalny i ta tendencja wydaje się stała.
+Rozkład poparcia dla PSL z roku 2014
+(cud nad urną) różni się -- na zasadzie znajdź element niepasujący
+do pozostałych -- od sześciu pozostałych  rozkładów
+poparcia dla tej partii (czemu to już inna historia).
+</p>
+
+<div>
+  <a href='https://raw.githubusercontent.com/hrpunio/Data/master/wybory-wyniki/rozklady_PSL-PO-PiS_2010-2015.jpg'>
+    <img width='75%' longdesc='[[' alt=''
+      src='https://raw.githubusercontent.com/hrpunio/Data/master/wybory-wyniki/rozklady_PSL-PO-PiS_2010-2015.jpg'/>
+ </a>
+</div>
+
+<p>Dane są <a href='https://github.com/hrpunio/Data/tree/master/wybory-wyniki'>tutaj</a></p>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Żuławy w Koło 2018</title>
+<!-- Tags: rowery,inne,r,statistics-->
+</head><body><!-- ##Published : 2018-09-18T01:45:27CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_2018_vs_2017.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ZwK_2018_vs_2017.jpg'/>
+ </a>
+</div>
+
+<p>
+Się tak rozochociłem, że zapisałem się na Żuławy w Koło 2018 (99 PLN). W ramach
+  przygotowań, że tak powiem taktycznych postanowiłem rozpoznać możliwości przeciwnika:-)
+  Konkretnie ustalić jak jechali ci co się zapisali, a co już startowali w ŻwK w roku
+  2017 albo 2016. Zadanie zatem polega na odszukaniu na liście zgłoszeń tych co się zapisali na edycję 2018
+  i jednocześnie ukończyli ŻwK w latach 2016/2017. Oczywiście nie ręcznie, tylko automatem:
+</p>
+<pre>
+## poniższe ściąga plik z listą zapisanych
+wget 'http://www.czasomierzyk.pl/zapisy2016/zulawywkolo/index.php?akcja=lista' -O ZwK2018.out
+</pre>
+<p>Plik HTML ma tak prostą strukturę, że jego zamiana (za pomocą wyrażeń regularnych)
+na CSV jest banalna. Jak już mam ten plik CSV, to porównuję
+go do połączonych wyników z lat 2017/2016 (też w formacie CSV).
+Skrypt mam co porównuje pliki CSV:
+</p>
+<pre>
+perl join_csvs.pl -fn1 ZwK201809190908.csv  -fs1 1,2 -fn2 ZwK16_17.csv -fs2 1,2
+</pre>
+<p>Porównuje pliki <code>ZwK201809190908.csv</code> oraz
+<code>ZwK16_17.csv</code>, w oparciu o (wspólną) wartości dla kolumn
+nr 1 oraz nr 2 (w tym przypadku
+są to kolumny zawierające nazwisko
+i imię). Innymi słowy <code>fs1 c1,c2...</code>,
+to klucz główny, a <code>fs2 c1,c2</code>, to klucz obcy.
+Skrypt wypisuje połączone wiersze odpowiadające tym wierszom dla, których
+klucz główny = klucz obcy. Na dziś (19 września) takich wierszy wypisał 55,
+(na 104 zgłoszenia na dystansie 140km), ale pomijam tych co startowali kiedyś na
+najkrótszym dystansie lub tych, którzy startowali wprawdzie na najkrótszym, ale mieli średnią
+mniejszą niż 24kmh (odpada w ten sposób 10 zostaje 45).
+Na koniec plik jest zapodawany do prostego skryptu
+rysującego wykres słupkowy:</p>
+<pre>
+z &lt;- read.csv("ZwK_2018_vs_2017.csv", sep = ';',
+   header=T, na.string="NA", dec=".");
+
+s140 &lt;- summary(z$speed)
+
+z &lt;- subset (z, ( speed > 16.0 )); ## bez maruderów
+
+# wykres słupkowy
+h &lt;- hist(z$speed,
+  breaks=c(18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35),
+  freq=TRUE,
+  col="orange",
+  main="Dystans: 140 (biorący udział w latach 2017-16)",
+  xlab="Prędkość średnia w latach 2017--16 [kmh]",ylab="L.kolarzy",
+  labels=T, xaxt='n' )
+  axis(side=1, at=c(18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35))
+  text(38, 37, summary_label, cex = .8, adj=c(1,1) )
+</pre>
+<p>Jak widać paru ludków w okolicach
+30kmh jest. Będzie za kim jechać.</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

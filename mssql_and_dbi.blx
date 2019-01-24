@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>MS SQL, Perl i DBI</title>
+<!-- Tags: mssql,perl,dbi-->
+</head><body><!-- ##Published : 2018-03-20T04:51:51CEST ##-->
+
+<p>Kolega L. mi zadanie zlecił, w którym wykorzystywaną bazą musi być MS SQL.
+Podchodziłem do tego jak do jeża, ale wreszcie się przełamałem, usiadłem
+i działa (aż dziwne). W skład zadania wchodzi też baza danych pn. <code>GraphiPlus</code>,
+która zawiera m.in. tabele
+o nazwach <code>dbo.FACTURES</code> oraz <code>dbo.SOCIETES</code>: </p>
+
+<pre>
+#!/usr/bin/perl
+use strict;
+use utf8;
+use DBI; 
+require DBD::ODBC;
+my $serverN = 'E5410-KOMPUTER\\SQLEXPRESS';
+my $baseN = 'GraphiPlus';
+my $dsN = "GraphiPlus";
+## Obie formy działają (pierwsza przez DSN = Data Source Name/Źródło danych)
+## Definiowanie DSN: Panel_Sterowania&#x2192;Wszystkie_Elementy&#x2192;
+##    Narzędzia_Administracyjne&#x2192;Źródła_danych_(ODBC)
+# my $dbh = DBI->connect("dbi:$dsN", '&lt;UID>', '&lt;PASSWD>',
+#   { RaiseError => 1 } ) or die DBI->errstr;
+# Albo
+my $dbh = DBI->connect("dbi:ODBC:driver={SQL Server};Server=$serverN;database=$baseN;uid=&lt;UID>;pwd=&lt;PASSWD;",
+   {RaiseError => 1, } ) or die DBI->errstr;
+
+print "*** Połączono z $baseN ***\n";
+
+## małe litery do.TABELA są istotne!
+my $sth = $dbh->prepare("SELECT * FROM dbo.FACTURES ") || die "ERROR" . $dbh->errstr ;  
+$sth ->execute();
+
+print "**** Tabela FACTURES:\n";
+while ( my @invoiceRecord = $sth->fetchrow_array() ) {
+   print (join(";", @invoiceRecord) . "\n");
+}
+
+## musi być (w mySQL niekoniecznie)
+$sth->finish();
+
+print "**** Tabela SOCIETESS:\n";
+my $sth = $dbh->prepare("SELECT * FROM dbo.SOCIETES ") || die "ERROR" . $dbh->errstr ;  
+$sth ->execute();
+
+while ( my @invoiceRecord = $sth->fetchrow_array() ) {
+   print (join(";", @invoiceRecord) . "\n");
+}
+
+$sth->finish();
+
+$dbh->disconnect();
+
+###
+</pre>
+
+<p>Gdybym nie znał nazw tabel to można je ustalić albo za pomocą SQL Server Management Studio,
+albo wykonując polecenie <code>SELECT</code> na systemowej tabeli pn. <code>sys.tables</code>:
+</p>
+
+<pre>
+my $sts = $dbh->prepare("SELECT name FROM sys.tables ") || die "ERROR" . $dbh->errstr ;
+</pre>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory samorządowe 2018. Profil wiekowy kandydatów</title>
+<!-- Tags: polityka,inne,wybory-->
+</head><body><!-- ##Published : 2018-09-26T04:06:43CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-0.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-0.jpg'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-2.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-2.jpg'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-4.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/wybory-2018-ws-kandydaci-4.jpg'/>
+ </a>
+ <br/>
+</div>
+
+<p>Na stronie
+<code>https://wybory2018.pkw.gov.pl/pl/geografia#general_committee_stat</code>
+jest informacja, że w wyborach na radnych sejmików wojewódzkich
+bierze udział/zostało zarejestrowanych 7076 kandydatów.
+Zaczynając od tej strony
+można się doklikać do stron dla każdego województwa oraz okręgu. Są to odpowiednio
+strony tworzone według schematu:
+</p>
+<pre>
+https://wybory2018.pkw.gov.pl/pl/geografia/220000#geo_committee_stat
+https://wybory2018.pkw.gov.pl/pl/geografia/220000/voiv_council/1
+</pre>
+
+<p>Strona okręgu zawiera listę kandydatów a jej HTML jest tak nieskomplikowany, że zamiana
+na na przykład plik CSV jest banalnie prosta.</p>
+
+<p>Po ściągnięciu 85 ,,stron okręgowych'' i ich zamianie na CSV,
+faktycznie otrzymałem plik składający
+się z 7076 wierszy, z których każdy jest postaci:
+</p>
+<pre>
+woj;okr;komitet;nr;kandydat;wiek;skad;oswidczenie;uwagi
+02;o1;SLD-LR;1;SIKORA Arkadiusz;45;Oleśnica;;
+</pre>
+
+<p>Dalszą analizę przeprowadziłem wykorzystując R:</p>
+
+<pre>
+k &lt;- read.csv("kandydaci_ws_2018_3.csv", sep = ';',  header=T, na.string="NA", dec=",");
+with (k, table(komitet))
+</pre>
+
+<div>
+  <table>
+    <tr><td>Komitet </td><td>liczba kandydatów </td><td>liczba okręgów</td></tr>
+<tr><td>BS </td><td>447 </td><td>62</td></tr>
+<tr><td>K15  </td><td>675 </td><td>84</td></tr>
+<tr><td>KW INICJATYWA OBYWATELSKA POWIATU TARNOGÓRSKIEGO </td><td>31 </td><td>4</td></tr>
+<tr><td>KW STOWARZYSZENIA LEX NATURALIS </td><td>12 </td><td>2</td></tr>
+<tr><td>KW STRONNICTWA PRACY </td><td>6 </td><td>1</td></tr>
+<tr><td>KW ŚLĄSKIEJ PARTII REGIONALNEJ  </td><td>85 </td><td>12</td></tr>
+<tr><td>KW ŚLONZOKI RAZEM </td><td>40 </td><td>5</td></tr>
+<tr><td>KW WSPÓLNA MAŁOPOLSKA 51 KW WYBORCÓW AKCJA NARODOWA </td><td>27 </td><td>5</td></tr>
+<tr><td>KW WYBORCÓW ISKRA </td><td>38 </td><td>6</td></tr>
+<tr><td>KW WYBORCÓW JEDNOŚĆ NARODU -- WSPÓLNOTA  </td><td>118 </td><td>18</td></tr>
+<tr><td>KW WYBORCÓW AGNIESZKI JĘDRZEJEWSKIEJ </td><td>5 </td><td>1</td></tr>
+<tr><td>KW WYBORCÓW MNIEJSZOŚĆ NIEMIECKA  </td><td>31 </td><td>4</td></tr>
+<tr><td>KW WYBORCÓW POLSKIE RODZINY RAZEM </td><td>28 </td><td>4</td></tr>
+<tr><td>KW WYBORCÓW PROJEKT ŚWIĘTOKRZYSKIE BOGDANA WENTY  </td><td>30 </td><td>4</td></tr>
+<tr><td>KW WYBORCÓW SPOZA SITWY  </td><td>23 </td><td>4</td></tr>
+<tr><td>KW WYBORCÓW Z DUTKIEWICZEM DLA DOLNEGO ŚLĄSKA </td><td>45 </td><td>5</td></tr>
+<tr><td>KW ZJEDNOCZENIE CHRZEŚCIJAŃSKICH RODZIN  </td><td>40 </td><td>7</td></tr>
+<tr><td>KW ZWIĄZKU SŁOWIAŃSKIEGO  </td><td>17</td><td>3</td></tr>
+<tr><td>PiS </td><td>722 </td><td>85</td></tr>
+<tr><td>PO-N </td><td>722 </td><td>85</td></tr>
+<tr><td>PSL </td><td>722 </td><td>85</td></tr>
+<tr><td>RAZEM </td><td>549 </td><td>85</td></tr>
+<tr><td>RN </td><td>528 </td><td>79</td></tr>
+<tr><td>SLD-LR </td><td>713 </td><td>85</td></tr>
+<tr><td>WiS </td><td>448 </td><td>63</td></tr>
+<tr><td>WwS </td><td>574 </td><td>77</td></tr>
+<tr><td>ZIELONI </td><td>349 </td><td>57</td></tr>
+</table>
+</div>
+
+<p>Dalszą analizą objęto 10 komitetów, które zarejestrowały kandydatów
+w ponad połowie okręgów wyboczych (WsS to Wolność w Samorządzie; WiS to Wolni i Solidarni
+a BS oznacza Komitet pn Bezpartyjni Samorządowcy):
+</p>
+
+<pre>
+aggregate (k$wiek, list(Numer = k$komitet), fivenum)
+
+wB &lt;- c(18,20,25,30,35,40,45,50,55,60,65,70,75,80,95);
+summary_label &lt;- paste (sep='', "Średnia = ", sprintf("%.1f", sumS[["Mean"]]),
+  "\nMediana = ", sumS[["Median"]],
+  "\nQ1 = ", sumS[["1st Qu."]],  "\nQ3 = ", sumS[["3rd Qu."]] )
+
+## wykres słupkowy
+h &lt;- hist(kandydaci$wiek, 
+   breaks=wB, 
+   freq=TRUE,
+   col="orange", main="Wiek kandydatów do sejmików...",
+   ylab="liczba kandydatów", xlab="wiek", labels=T, xaxt='n')
+   axis(side=1, at=wB)
+   text(80, 600, summary_label, cex = .8, adj=c(0,1))
+
+   ## wykres pudełkowy
+ggplot(kandydaci, aes(x=komitet, y=wiek, fill=komitet))  +
+   geom_boxplot() +
+   ylab("Wiek") +
+   xlab("Komitet") +
+   annotate(geom="text", x = 1, y = 90, hjust=0, size=3,
+    label = "WwS = Wolność w Samorządzie | ...") +
+   guides(fill=FALSE) ;
+</pre>
+
+<div>
+<table>
+<tr><td>#</td><td>komitet</td><td>min</td><td>q1</td><td>Me</td><td>q3</td><td>max</td></tr>
+<tr><td>1</td><td>BS</td><td>18.0</td><td>36.0</td><td>44.0</td><td>57.0</td><td>81.0</td></tr>
+<tr><td>2</td><td>K15</td><td>18.0</td><td>32.0</td><td>42.0</td><td>53.0</td><td>82.0</td></tr>
+<tr><td>3</td><td>PiS</td><td>18.0</td><td>40.0</td><td>51.0</td><td>59.0</td><td>79.0</td></tr>
+<tr><td>4</td><td>PO-N</td><td>18.0</td><td>41.0</td><td>51.0</td><td>60.0</td><td>75.0</td></tr>
+<tr><td>5</td><td>PSL</td><td>20.0</td><td>44.0</td><td>55.0</td><td>62.0</td><td>80.0</td></tr>
+<tr><td>6</td><td>RAZEM</td><td>18.0</td><td>28.0</td><td>34.0</td><td>42.0</td><td>87.0</td></tr>
+<tr><td>7</td><td>RN</td><td>18.0</td><td>27.0</td><td>34.0</td><td>48.0</td><td>81.0</td></tr>
+<tr><td>8</td><td>SLD-LR</td><td>18.0</td><td>44.0</td><td>58.0</td><td>65.0</td><td>83.0</td></tr>
+<tr><td>9</td><td>WiS</td><td>18.0</td><td>38.0</td><td>50.0</td><td>61.5</td><td>85.0</td></tr>
+<tr><td>10</td><td>WwS</td><td>18.0</td><td>24.0</td><td>31.0</td><td>43.0</td><td>83.0</td></tr>
+<tr><td>11</td><td>ZIELONI</td><td>18.0</td><td>34.0</td><td>44.0</td><td>55.0</td><td>80.0</td></tr>
+</table>
+</div>
+<p>To samo dla woj. pomorskiego:</p>
+<pre>
+kandydaci &lt;- subset (kandydaci, (woj == "22" ))
+aggregate (kandydaci$wiek, list(Numer = kandydaci$komitet), fivenum)
+
+## itd...
+</pre>
+
+<div>
+<table>
+<tr><td>1</td><td>BS</td><td>23.0</td><td>36.5</td><td>44.0</td><td>47.5</td><td>72.0</td></tr>
+<tr><td>2</td><td>K15</td><td>23.0</td><td>37.0</td><td>50.0</td><td>58.0</td><td>73.0</td></tr>
+<tr><td>3</td><td>PiS</td><td>21.0</td><td>42.5</td><td>49.0</td><td>63.5</td><td>71.0</td></tr>
+<tr><td>4</td><td>PO-N</td><td>22.0</td><td>39.0</td><td>50.0</td><td>60.5</td><td>75.0</td></tr>
+<tr><td>5</td><td>PSL</td><td>28.0</td><td>49.0</td><td>62.0</td><td>68.0</td><td>80.0</td></tr>
+<tr><td>6</td><td>RAZEM</td><td>19.0</td><td>29.0</td><td>33.5</td><td>38.0</td><td>87.0</td></tr>
+<tr><td>7</td><td>RN</td><td>21.0</td><td>27.0</td><td>31.5</td><td>49.0</td><td>66.0</td></tr>
+<tr><td>8</td><td>SLD-LR</td><td>18.0</td><td>50.0</td><td>59.0</td><td>62.5</td><td>75.0</td></tr>
+<tr><td>9</td><td>WwS</td><td>19.0</td><td>27.0</td><td>32.0</td><td>38.5</td><td>67.0</td></tr>
+<tr><td>10</td><td>ZIELONI</td><td>19.0</td><td>39.0</td><td>48.0</td><td>54.0</td><td>67.0</td></tr>
+</table>
+</div>
+<p>Dane i skrypty są
+<a href='https://github.com/hrpunio/Data/tree/master/ws2018'>tutaj</a>.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

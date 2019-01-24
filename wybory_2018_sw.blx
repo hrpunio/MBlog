@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory 2018. Różnica w liczbie mandatów do Sejmików</title>
+<!-- Tags: wybory,polityka,inne,r-->
+</head><body><!-- ##Published : 2018-10-23T06:01:13CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ws2018_2018_14.jpg'>
+ <img width='180px' longdesc='[[' alt=''
+   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/ws2018_2018_14.jpg'/>
+ </a>
+</div>
+
+<p>Powyborczo. Primo: szkoda, że PiSom te kamery nie wyszły
+byłoby się z czego pośmiać oglądając debili ze świeczkami
+(innego pożytku z zainstalowania -- przy założeniu #1kamera na jedną
+komisję -- 27tys kamer nie widzę).
+</p>
+<p>Ale do rzeczy: dane pobrane z PKW (na Wikipedii za 2014 mają
+dokładnie takie same, za 2018 nie sprawdzałem)</p>
+<pre>
+require(ggplot2)
+
+#d &lt;- read.csv("mandaty.csv", sep = ';',  header=T, na.string="NA");
+# Albo po prostu bo danych mało
+# https://www.datamentor.io/r-programming/data-frame/
+x &lt;- data.frame("komitet" = c("PIS", "PO", "PSL", "SLD", "INNI"),
+   "y2018" = c(254,194,70,15,19),
+   "y2014" = c(171,179,157,28,20) )
+
+# różnica w liczbie uzyskanych mandatów
+d$diff &lt;- d$y2018 - d$y2014 
+
+ggplot(d, aes(x= komitet, y=diff, fill=komitet)) +
+  geom_bar(stat="identity") +
+  scale_fill_manual("legend",
+    values = c("PIS" = "#421C52", "PO" = "blue",
+    "PSL" = "green", "SLD" = "red", "INNI" = "pink")) +
+    geom_text(aes(x=komitet, y=diff, label=diff),
+    hjust=0, vjust=-0.25, size=3.5) +
+ggtitle ("Mandaty sejmików wojewódzkich 2018--2014 (zmiana)")
+</pre>
+<p>BTW, jeżeli protokoły komisje obwodowe wysłały (zapewne elektronicznie)
+do PKW góra w poniedziałek (w mojej już poniedziałek-rano okleili kopią drzwi),
+to co niezawisłe Hermelińskie robiły we wtorek i środę?
+Niestety tego prostego pytania żaden z tzw. dziennikarzy (aka specjalistów
+od pierdołowatych njusów czyli #pierdokontentu) nie zadał.
+</p>
+<p>
+A mnie ono ciekawi.
+</p>
+<p>BTW2: ten wpis jest 500 w blogu. Wychodzi jakieś 45/rok średnio
+(z tendencją spadkową).
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

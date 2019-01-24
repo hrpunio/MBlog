@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory 2014 (drugie pobranie danych)</title>
+<!-- Tags: inne,polityka,wybory-->
+</head><body><!-- ##Published : 2018-09-18T01:45:27CEST ##-->
+
+<p>
+Ściągnąłem protokoły z wyborów do sejmików wojewódzkich
+jeszcze raz. Punktem wyjścia były indywidualne pliki dla każdej gminy
+pobrane ze strony <code>samorzad2014.pkw.gov.pl</code>.
+Te pliki zawierają
+zsumowane wyniki wyborów dla danej gminy, ale także zawierają adresy URL do
+plików z wynikami na poziomie poszczególnych komisji (z tej gminy).
+Mają one adres URL wg schematu:
+</p>
+
+<pre>
+http://samorzad2014.pkw.gov.pl/357_rady_woj/0/NR_TERYT_GMINY
+</pre>
+<p>Mając zestawienie numerów TERYT gmin pobieram indywidualne pliki
+za pomocą prostego skryptu:</p>
+
+<pre>
+use LWP::Simple;
+## Na wejściu lista 6-cyfrowych numerów gmin
+while (&lt;>) { $nn++;
+   chomp();
+   $File{"$_"}++;
+   $url = "http://samorzad2014.pkw.gov.pl/357_Sejmiki_wojewodztw/0/$_";
+
+   if ( $File{"$_"} > 1 ) {
+   $file = "./html/$_" . "$File{$_}_"  . ".html"; }
+   else { $file = "./html/$_" . ".html"; }
+
+   getstore($url, $file);
+   print STDERR "$nn = $url => $file... stored\n";
+}
+</pre>
+<p>Z tych plików wydłubuję numery komisji (które są wartościami
+atrybutu <code>href</code> do pliku z protokołem i mają postać
+<code>321_protokol_komisji_obwodowej/NRKOMISJI</code>)
+i zapisuję do pliku o strukturze:
+</p>
+<pre>
+020101;321_protokol_komisji_obwodowej/NRKOMISJI
+</pre>
+<p>
+Teraz z plików komisji odczytuję adresy URL protokołów
+wyborów do sejmików. Ten URL wygląda następująco:
+</p>
+
+<pre>
+020101;321_protokol_komisji_obwodowej/NRKOMISJI/rdw_COŚTAM
+</pre>
+
+<p>Przy czym <code>COŚTAM</code> to cyfra, np. <code>rdw_5</code>.
+Problem, że ta cyfra nie zawsze jest taka sama, stąd konieczność
+przeczytania pliku i odszukania w nim odsyłacza do protokołu
+wyborów do sejmików. Na szczęście pliki HTML są w miarę proste
+i do odszukania tego
+co trzeba wystarczy proste wyrażenie regularne. Poniższy skrypt
+po odszukaniu odsyłacza pobiera plik protokołu i zapisuje
+w katalogu <code>./protokoly_sw/</code>:
+</p>
+
+<pre>
+#!/usr/bin/perl
+use LWP::Simple;
+my $log = "protokoly_sw.log";
+open (LOG, ">$log") || die ("Nie mogę pisać do $log");
+
+while (&lt;>) {  $nn++;
+  chomp();
+  ($teryt, $postfix, $nrk) = split /[;\/]/, $_;
+
+  unless ( -f "./protokoly_sw/$nrk" ) {
+     $file = "./protokoly_sw/$nrk";
+
+     open (LOGP, "./komisje/$nrk");
+
+     while (&lt;LOGP>) { chomp();
+        if (/([^\/]*protokol_komisji.*)">Sejmik/) {## URL do protokołu
+           $prot_url = $1;
+           print "$1\n";
+           last
+        }
+     }
+     close (LOGP);
+     $url = "http://samorzad2014.pkw.gov.pl/$prot_url";
+     getstore($url, $file);
+     print LOG "$nn = $url => $file stored\n";
+     print STDERR "*** $nn = $url => $file stored\n";
+  } else { print STDERR "*** $url => $file stored already\n"; }
+}
+</pre>
+
+<p>Teraz analizuję pobrane protokoły zapisując informacje
+do trzech plików <code>.csv</code>: <code>ws2014_komisje.csv</code>
+<code>ws2014_listy.csv</code> oraz
+<code>ws2014_kandydaci.csv</code>. Pierwszy zawiera informacje
+zbiorcze takie jak liczba uprawnionych czy liczba 
+głosów ważnych dla każdej komisji, drugi informacje zbiorcze
+o liczbie głosów oddanych na każdą listę wyborczą w każdej komisji
+a trzeci o liczbie głosów 
+oddanych na każdego kandydata w każdej komisji. W związu z tym:
+</p>
+
+<pre>
+wc -l ws2014_*csv
+  3062457 ws2014_kandydaci.csv
+   301876 ws2014_listy.csv
+    27393 ws2014_komisje.csv
+</pre>
+
+<p>
+Tj. <code>ws2014_komisje.csv</code> ma 27393 wierszy (i tyle jest komisji);
+<code>ws2014_listy.csv</code> ma 301876, a <code>ws2014_kandydaci.csv</code>
+ponad 3mln wierszy (wynik kandydata w każdej komisji, 
+w której był zarejestrowany). Skrypt (nieco uproszczony) wydłubujący potrzebne informacje
+z pliku protokołu wygląda następująco:
+</p>
+
+<pre>
+#!/usr/bin/perl
+open (LOG, ">>ws2014_log.log");
+
+open (L, ">>ws2014_listy.csv");
+open (K, ">>ws2014_kandydaci.csv");
+open (X, ">>ws2014_komisje.csv");
+
+$fileName = $ARGV[0];
+$fileName =~ s/(\/[^\/]+)$/$1/;
+
+while(&lt;>) {
+   chomp();
+	    
+   if (/&lt;h2>/) {  $mode = 'I'; 
+
+       while (&lt;>) {
+          chomp();
+	  if (/&lt;div>Kod terytorialny/) { $Teryt = next_line(); }
+          if (/&lt;div>Numer obwodu/) { $IdO = next_line(); }
+           if (/&lt;div>Adres/) { $Addr = next_line();
+             $IdDataFull = "$fileName;$Teryt;$IdO;$Addr";
+             $IdData = "$fileName;$Teryt;$IdO";
+             last;
+          }
+       }
+   }
+   if ($mode eq 'I') {
+   }
+
+   if (/Wyniki wyborów na Kandydatów/) {  $mode = 'C' }
+   if (/ZESTAWIENIE WYNIKÓW/) {  $mode = 'S';
+       while (&lt;>) {
+          chomp();
+
+	  ## pobieranie informacji nt. komisji
+	  ## pominięto kilkanaście wierszy postaci:
+	  ## if (/&lt;div>###/) { $xxx = next_line() }
+	  ## ...
+          if (/&lt;div>Liczba kart ważnych/) { $N_karty_wazne = next_line(); }
+          if (/&lt;div>Liczba głosów ważnych oddanych/) {
+	    $N_glosy_wazne = next_line() ;
+	    print X "$IdDataFull;$N_uprawnieni;$N_karty_otrzymane;$N_karty_niewykorzystane;"
+	      . "$N_karty_wydane;$N_pelnomocnicy;$N_pakiety;$N_karty_wyjete;$karty_z_kopert;"
+	      . "$N_karty_niewazne;$N_karty_wazne;$N_glosy_wazne;$N_glosy_niewazne\n";
+	    last;
+          }
+       }
+
+   ##########
+   if (/Wyniki wyborów na listy/) {
+     $mode = 'L' ;
+     $colNo=0;
+     %List = ();
+     $start = 0;
+     while (&lt;>) {
+          chomp();
+          if (/&lt;tbody>/) {$start = 1}
+          if ($start == 1 ) {
+              if (/&lt;td[^&lt;>]*>/ ) {
+	         $colNo++;
+                 $List{$colNo} = clean($_);
+              }
+              if (/&lt;tr>/) {
+                  $colNo=0;
+                  %List = ();
+		}
+	      if (/&lt;\/tr>/) {
+		$line_ = "$IdData;";
+		for $x (sort keys %List ) { $line_ .= "$List{$x};" }
+		print L "$line_\n";
+              }
+              if (/&lt;\/tbody>/ ) {###
+                 last;
+              } ##//
+	    }
+	}
+   }
+   ###########
+
+   if ($mode eq 'C' &amp;&amp; /&lt;tr>/) {
+       $colNo=0;
+       %Candidate = ();
+       while (&lt;>) {
+	 chomp();
+	 
+          if (/&lt;table>/) { next } ## skip this line
+
+	 if (/&lt;\/tr>/ ) { 
+              $line_ = "$IdData;";
+              for $x (sort keys %Candidate ) {  $line_ .= "$Candidate{$x};" }
+              print K "$line_\n";
+              last; 
+          } ## //end 
+          if (/&lt;td[^&lt;>]*>/ ) { #############
+	       $colNo++;
+               $Candidate{$colNo} = clean($_);
+	     }
+	}
+     }
+
+}
+
+### ### ### 
+
+sub clean {
+  my $x = shift;
+
+  $x =~ s/&lt;[^&lt;>]+>//g;
+  $x =~ s/^[\t ]+|[\t ]+$//g;
+  $x =~ s/&quot;//g;
+  return ($x)
+}
+
+
+sub next_line {
+   while (&lt;>) {
+      chomp();
+      return (clean ($_));
+   }
+}
+
+close(L);
+close(K);
+close(X);
+
+print LOG "$fileName...\n";
+close (LOG);
+</pre>
+
+<p>Kilka minut i po bólu. Teraz sprawdzam czy to co się pobrało i to co było
+do tej pory z grubsza się zgadza. 
+</p>
+<pre>
+#!/usr/bin/perl
+$pobranie1="komisje-frekwencja-ws2014.csv"; ## z 2015r
+$pobranie2="ws2014_komisje.csv";
+
+open(WX, $pobranie1) || die "cannot open $pobranie1\n";
+
+while (&lt;WX>) {
+  chomp();
+  ($teryt, $nrk, $nro, $adres, $lwug, $lkw, $lkwzu, 
+        $lgnw, $lgw, $freq, $pgnw) = split /;/, $_;
+  $LWUG1{"$teryt:$nro"} = $lwug; ## liczba wyborców
+  $LGW1{"$teryt:$nro"} = $lgw; ## glosy ważne
+  $ADDR1{"$teryt:$nro"} = $adres; ##
+}
+close (WX);
+
+### ### ###
+
+open(WY, $pobranie2) || die "cannot open $pobranie2\n";
+while (&lt;WY>) {
+  chomp();
+  ($id, $teryt, $idk, $adres, $uprawnieni, $kartyOtrzymane, 
+    $kartyNiewydane, $kartyWydane, $pelnomocnicy, $pakiety, 
+    $kartyWyjete, $koperty, $kartyNiewazne, $kartyWazne,
+    $glosy, $glosyNiewazne) = split /;/, $_;
+  $LWUG2{"$teryt:$idk"} = $uprawnieni;
+  $LGW2{"$teryt:$idk"} = $glosy;
+  $ADDR2{"$teryt:$idk"} = $adres;
+}
+close (WY);
+
+### LWUG1 ma mniej głosów ## ### ### ### ###
+for $ik ( sort keys %LWUG1 ) {
+    if ( ( $LWUG1{$ik} != $LWUG2{$ik} ) || 
+       ($LGW1{$ik} != $LGW2{$ik} )) {
+       print "$ik $LWUG1{$ik} = $LWUG2{$ik} $LGW1{$ik} = $LGW2{$ik}\n";
+    }
+}
+
+</pre>
+<p>Identyfikatorem komisji na stronach PKW jest 6-cyfrowy numer TERYT + numer komisji (w gminie).
+Porównanie 26477 komisji pobranych 2015r.
+z 27446 komisjami pobranymi teraz (+969 komisji) daje w rezultacie:
+</p>
+<pre>
+021901:1 2020 = 2020 914 = 913
+021901:2 2189 = 2189 742 = 741
+026401:112 2039 = 2039 746 = 744
+026401:17 2001 = 2001 536 = 534
+026401:178 2073 = 2073 765 = 762
+026401:18 1600 = 1600 474 = 473
+026401:194 1615 = 1615 637 = 628
+026401:215 1457 = 1457 528 = 527
+026401:245 2058 = 2058 695 = 697
+026401:42 1892 = 1892 504 = 503
+026401:70 1823 = 1823 597 = 593
+026401:78 1918 = 1918 762 = 760
+241004:4 994 =  850 350 = 350
+241005:13 1736 = 1736 764 = 762
+241005:22 1422 = 1422 569 = 567
+241005:6 1441 = 1441 732 = 723
+241005:7 1668 = 1668 623 = 621
+</pre>
+
+<p>Czyli dane nie były picowane :-) Dobrze wiedzieć</p>
+<p>Pobrane dane są <a href='https://github.com/hrpunio/Data/tree/master/ws2014_pobranie_2018'>tutaj</a>.
+</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

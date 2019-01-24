@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory 2014 i jeszcze więcej rozkładów</title>
+<!-- Tags: polityka,inne,wybory,r-->
+</head><body><!-- ##Published : 2018-10-01T14:31:14CEST ##-->
+
+<p>Rozkład odsetka głosów nieważnych (definiowanego jako głosy nieważne / (głosy ważne + nieważne))
+w wyborach samorządowych w 2014. Pierwszy histogram
+dotyczy całej Polski (27455 komisji), drugi województwa pomorskiego (1856)
+a trzeci Mazowieckiego (3574).</p>
+<pre>
+#!/usr/bin/Rscript
+# Skrypt wykreśla histogramy dla danych z pliku ws2014_komisje.csv
+# (więcej: https://github.com/hrpunio/Data/tree/master/ws2014_pobranie_2018)
+#
+par(ps=6,cex=1,cex.axis=1,cex.lab=1,cex.main=1.2)
+komisje &lt;- read.csv("ws2014_komisje.csv", sep = ';',
+       header=T, na.string="NA");
+
+komisje$ogn &lt;- komisje$glosyNiewazne  / (komisje$glosy + komisje$glosyNiewazne) * 100;
+
+summary(komisje$glosyNiewazne); fivenum(komisje$glosyNiewazne);
+sX &lt;- summary(komisje$ogn);
+sF &lt;- fivenum(komisje$ogn);
+sV &lt;- sd(komisje$ogn, na.rm=TRUE)
+skewness &lt;- 3 * (sX[["Mean"]] - sX[["Median"]])/sV
+
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nq1 = %.1f\nq3 = %.1f\nW = %.2f", 
+  sX[["Mean"]], sX[["Median"]], sX[["1st Qu."]], sX[["3rd Qu."]], skewness)
+
+## ##
+kpN &lt;- seq(0, 100, by=2);
+kpX &lt;- c(0, 10,20,30,40,50,60,70,80,90, 100);
+nn &lt;- nrow(komisje)
+
+h &lt;- hist(komisje$ogn, breaks=kpN, freq=TRUE,
+   col="orange", main=sprintf ("Rozkład odsetka głosów nieważnych\nPolska ogółem %i komisji", nn), 
+   ylab="%", xlab="% nieważne", labels=F, xaxt='n' )
+   axis(side=1, at=kpN, cex.axis=2, cex.lab=2)
+   posX &lt;- .5 * max(h$counts)
+text(80, posX, summary_label, cex=1.4, adj=c(0,1))
+
+## ##
+komisje$woj &lt;- substr(komisje$teryt, start=1, stop=2)
+
+komisjeW &lt;- subset (komisje, woj == "22"); ## pomorskie
+nn &lt;- nrow(komisjeW)
+sX &lt;- summary(komisjeW$ogn); sF &lt;- fivenum(komisjeW$ogn);
+sV &lt;- sd(komisjeW$ogn, na.rm=TRUE)
+skewness &lt;- 3 * (sX[["Mean"]] - sX[["Median"]])/sV
+
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nq1 = %.1f\nq3 = %.1f\nW = %.2f", 
+  sX[["Mean"]], sX[["Median"]], sX[["1st Qu."]], sX[["3rd Qu."]], skewness)
+
+h &lt;- hist(komisjeW$ogn, breaks=kpN, freq=TRUE,
+   col="orange", main=sprintf("Rozkład odsetka głosów nieważnych\nPomorskie %i komisji", nn), 
+   ylab="%", xlab="% nieważne", labels=T, xaxt='n' )
+   axis(side=1, at=kpX, cex.axis=2, cex.lab=2)
+   posX &lt;- .5 * max(h$counts)
+text(80, posX, summary_label, cex=1.4, adj=c(0,1))
+
+komisjeW &lt;- subset (komisje, woj == "14"); ## mazowieckie
+nn &lt;- nrow(komisjeW)
+sX &lt;- summary(komisjeW$ogn); sF &lt;- fivenum(komisjeW$ogn);
+sV &lt;- sd(komisjeW$ogn, na.rm=TRUE)
+skewness &lt;- 3 * (sX[["Mean"]] - sX[["Median"]])/sV
+
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nq1 = %.1f\nq3 = %.1f\nW = %.2f", 
+  sX[["Mean"]], sX[["Median"]], sX[["1st Qu."]], sX[["3rd Qu."]], skewness)
+
+h &lt;- hist(komisjeW$ogn, breaks=kpN, freq=TRUE,
+   col="orange", main=sprintf("Rozkład odsetka głosów nieważnych\nMazowieckie %i komisji", nn), 
+   ylab="%", xlab="% nieważne", labels=T, xaxt='n' )
+   axis(side=1, at=kpX, cex.axis=2, cex.lab=2)
+   posX &lt;- .5 * max(h$counts)
+text(80, posX, summary_label, cex=1.4, adj=c(0,1))
+</pre>
+<p>Wyniki są takie oto (indywidualne wykresy tutaj:
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_glosy_niewazne-0.jpg'>#01</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_glosy_niewazne-1.jpg'>#02</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_glosy_niewazne-2.jpg'>#03</a>):
+</p>
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_glosy_niewazne-012.jpg'>
+ <img width='75%' longdesc='[[' alt='' src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_glosy_niewazne-012.jpg'/>
+ </a>
+</div>
+<p>Rozkłady odsetka poparcia dla PSL/PiS/PO
+w wyborach samorządowych w 2014 w całej Polsce, w miastach/poza miastami oraz w poszczególnych województwach.
+Poniższy skrypt generuje łącznie 60 wykresów słupkowych:
+</p>
+
+<pre>
+#!/usr/bin/Rscript
+# Skrypt wykreślna różnego rodzaju histogramy dla danych z pliku ws2014_komitety_by_komisja_T.csv
+# (więcej: https://github.com/hrpunio/Data/tree/master/ws2014_pobranie_2018)
+#
+showVotes &lt;- function(df, x, co, region, N, minN) {
+   ## showVotes = wykreśla histogram dla województwa (region)
+   kN &lt;- nrow(df)
+   sX &lt;- summary(df[[x]], na.rm=TRUE);
+   sV &lt;- sd(df[[x]], na.rm=TRUE)
+   ## współczynnik skośności Pearsona
+   skewness &lt;- 3 * (sX[["Mean"]] - sX[["Median"]])/sV
+
+   summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nq1 = %.1f\nq3 = %.1f\nS = %.1f\nW = %.2f", 
+     sX[["Mean"]], sX[["Median"]],
+     sX[["1st Qu."]], sX[["3rd Qu."]], sV, skewness)
+
+   if (minN &lt; 1) {
+   t &lt;- sprintf("Rozkład głosów na %s\n%s ogółem %d komisji", co, region, kN ) } 
+   else { t &lt;- sprintf("Rozkład głosów za %s\n%s ogółem %d komisji (N>%d)", co, region, kN, minN ) } 
+
+   h &lt;- hist(df[[x]], breaks=kpN, freq=TRUE, col="orange", main=t, 
+     ylab="%", xlab="% poparcia", labels=F, xaxt='n' )
+     axis(side=1, at=kpN, cex.axis=2, cex.lab=2)
+   ## pozycja tekstu zawierającego statystyki opisowe
+   posX &lt;- .5 * max(h$counts)
+   text(80, posX, summary_label, cex=1.4, adj=c(0,1))
+}
+
+## Wczytanie danych; obliczenie podst. statystyk:
+komisje &lt;- read.csv("ws2014_komitety_by_komisja_T.csv", 
+   sep = ';', header=T, na.string="NA");
+
+komisje$ogn &lt;- komisje$glosyNiewazne  / (komisje$glosy 
+   + komisje$glosyNiewazne) * 100;
+
+summary(komisje$PSL); summary(komisje$PiS); summary(komisje$PO);
+fivenum(komisje$PSLp); fivenum(komisje$PiSp); fivenum(komisje$POp);
+
+## ## ###
+par(ps=6,cex=1,cex.axis=1,cex.lab=1,cex.main=1.2)
+kpN &lt;- seq(0, 100, by=2);
+kpX &lt;- c(0, 10,20,30,40,50,60,70,80,90, 100);
+kN &lt;- nrow(komisje)
+region &lt;- "Polska"
+minTurnout &lt;- 0
+
+## cała Polska:
+showVotes(komisje, "PSLp", "PSL", region, kN, minTurnout);
+showVotes(komisje, "PiSp", "PiS", region, kN, minTurnout);
+showVotes(komisje, "POp",  "PO",  region, kN, minTurnout);
+
+## Cała Polska (bez małych komisji):
+## ( późniejszych analizach pomijane są małe komisje)
+minTurnout &lt;- 49
+komisje &lt;- subset (komisje, glosyLK > minTurnout); 
+kN &lt;- nrow(komisje)
+
+showVotes(komisje, "PSLp", "PSL", region, kN, minTurnout);
+showVotes(komisje, "PiSp", "PiS", region, kN, minTurnout);
+showVotes(komisje, "POp",  "PO",  region, kN, minTurnout);
+
+## Typ gminy U/R (U=gmina miejska ; R=inna niż miejska)
+komisjeW &lt;- subset (komisje, typ == "U"); 
+kN &lt;- nrow(komisjeW)
+region &lt;- "Polska/g.miejskie"
+showVotes(komisjeW, "PSLp", "PSL", region, kN, minTurnout);
+showVotes(komisjeW, "PiSp", "PiS", region, kN, minTurnout);
+showVotes(komisjeW, "POp",  "PO",  region, kN, minTurnout);
+
+komisjeW &lt;- subset (komisje, typ == "R"); 
+kN &lt;- nrow(komisjeW)
+region &lt;- "Polska/g.niemiejskie"
+showVotes(komisjeW, "PSLp", "PSL", region, kN, minTurnout);
+showVotes(komisjeW, "PiSp", "PiS", region, kN, minTurnout);
+showVotes(komisjeW, "POp",  "PO",  region, kN, minTurnout);
+
+## woj = dwucyfrowy kod teryt województwa:
+komisje$woj &lt;- substr(komisje$teryt, start=1, stop=2)
+
+cN &lt;- c("dolnośląskie", "dolnośląskie", "kujawsko-pomorskie",
+ "lubelskie", "lubuskie", "łódzkie", "małopolskie", "mazowieckie",
+ "opolskie", "podkarpackie", "podlaskie", "pomorskie", "śląskie",
+ "świętokrzyskie", "warmińsko-mazurskie", "wielkopolskie",
+ "zachodniopomorskie");
+cW &lt;- c("02", "04", "06", "08", "10", "12", "14", "16", "18",
+ "20", "22", "24", "26", "28", "30", "32");
+
+## wszystkie województwa po kolei:
+for (w in 1:16) {
+  wojS &lt;- cW[w]
+  ###region &lt;- cN[w];
+  region &lt;- sprintf ("%s (%s)", cN[w], wojS);
+
+  komisjeW &lt;- subset (komisje, woj == wojS); ##
+
+  showVotes(komisjeW, "PSLp", "PSL", region, kN, minTurnout);
+  showVotes(komisjeW, "PiSp", "PiS", region, kN, minTurnout);
+  showVotes(komisjeW, "POp",  "PO",  region, kN, minTurnout);
+}
+## ## koniec
+</pre>
+<p>Dla całej Polski wyniki są następujące:</p>
+
+<div>
+  <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-012.jpg'>
+    <img width='75%' longdesc='[[' alt=''
+      src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-012.jpg'/>
+ </a>
+</div>
+
+<p>Indywidualne wykresy zaś tutaj:
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-0.jpg'>#01</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-1.jpg'>#02</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-2.jpg'>#03</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-3.jpg'>#04</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-4.jpg'>#05</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-5.jpg'>#06</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-6.jpg'>#07</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-7.jpg'>#08</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-8.jpg'>#09</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-9.jpg'>#10</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-10.jpg'>#11</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-11.jpg'>#12</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-12.jpg'>#13</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-13.jpg'>#14</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-14.jpg'>#15</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-15.jpg'>#16</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-16.jpg'>#17</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-17.jpg'>#18</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-18.jpg'>#19</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-19.jpg'>#20</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-20.jpg'>#21</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-21.jpg'>#22</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-22.jpg'>#23</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-23.jpg'>#24</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-24.jpg'>#25</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-25.jpg'>#26</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-26.jpg'>#27</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-27.jpg'>#28</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-28.jpg'>#29</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-29.jpg'>#30</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-30.jpg'>#31</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-31.jpg'>#32</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-32.jpg'>#33</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-33.jpg'>#34</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-34.jpg'>#35</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-35.jpg'>#36</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-36.jpg'>#37</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-37.jpg'>#38</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-38.jpg'>#39</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-39.jpg'>#40</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-40.jpg'>#41</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-41.jpg'>#42</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-42.jpg'>#43</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-43.jpg'>#44</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-44.jpg'>#45</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-45.jpg'>#46</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-46.jpg'>#47</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-47.jpg'>#48</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-48.jpg'>#49</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-49.jpg'>#50</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-50.jpg'>#51</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-51.jpg'>#52</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-52.jpg'>#53</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-53.jpg'>#54</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-54.jpg'>#55</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-55.jpg'>#56</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-56.jpg'>#57</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-57.jpg'>#58</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-58.jpg'>#59</a>
+<a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/rozklady_komitety-59.jpg'>#60</a>):
+</p>
+
+
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

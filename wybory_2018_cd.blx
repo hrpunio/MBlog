@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Wybory samorządowe 2014/2018. Profil wiekowy kandydatów cd</title>
+<!-- Tags: polityka,inne,wybory-->
+</head><body><!-- ##Published : 2018-10-01T14:31:14CEST ##-->
+
+<p>Rozkłady wieku kandydatów (2014/2018) i radnych wybranych
+do sejmików wojewódzkich 2014.</p>
+
+<pre>
+require(ggplot2)
+### ### ###
+co &lt;- "Wiek kandydatów do sejmików wojewódzkich (2014 / Polska)"
+
+## deklaracja końców klas (hist)
+wB &lt;- c(18,20,25,30,35,40,45,50,55,60,65,70,75,80,95);
+wZ &lt;- c(36,38,40,42,44,46,48,50,52,54,56);
+wD &lt;- seq(18, 92, by=2);
+
+komitety &lt;- "DB = Demokracja Bezpośrednia | RN = Ruch Narodowy | NPKM = Nowa Prawica JKM";
+
+k &lt;- read.csv("kandydaci_ws_2014.csv", sep = ';',  header=T, na.string="NA", dec=",");
+
+with (k, table(komitet))
+
+aggregate (k$wiek, list(Numer = k$komitet), fivenum)
+## analiza dotyczy tylko kandydatów z komitetów ogólnopolskich
+kandydaci &lt;- subset (k,
+    (komitet == "PSL" | komitet == "DB" | komitet == "PiS" | komitet == "PO" |
+     komitet == "RN" | komitet == "NPKM" | komitet == "SLDLR"));
+kandydaciPL &lt;- kandydaci
+kNum &lt;- nrow(kandydaciPL) 
+kNum
+
+with (kandydaci, table(komitet))
+
+aggregate (kandydaci$wiek, list(Numer = kandydaci$komitet), fivenum)
+
+sumS &lt;- summary(kandydaci$wiek)
+sumV &lt;- sd(kandydaci$wiek)
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nQ1 = %.1f\nQ3 = %.1f\nS = %.1f",
+        sumS[["Mean"]], sumS[["Median"]],
+        sumS[["1st Qu."]],  sumS[["3rd Qu."]],  sumV)
+
+#par() ## przegląd parametrów
+# ps = stopień pisma
+par(ps=11,cex=1,cex.axis=1,cex.lab=1,cex.main=1.2)
+h &lt;- hist(kandydaci$wiek, 
+   breaks=wB, 
+   freq=TRUE,
+   col="orange", main=co,
+   ylab="liczba kandydatów", xlab="wiek", labels=T, xaxt='n')
+   axis(side=1, at=wB)
+   text(80, 600, summary_label, cex = .8, adj=c(0,1))
+
+par(ps=6,ce=2,cex.axis=2,cex.lab=2,cex.main=2)
+h &lt;- hist(kandydaci$wiek, 
+   breaks=wD, 
+   freq=TRUE,
+   col="orange", main=co, ylab="liczba kandydatów", xlab="wiek", labels=T, xaxt='n' )
+   axis(side=1, at=wB, cex.axis=2, cex.lab=2)
+   text(80, 600, summary_label, cex=0.4, size=3, pos=3, adj=c(0,1))
+
+### ### ###
+
+aggregate (kandydaci$wiek, list(Numer = kandydaci$nr), fivenum)
+aggregate (kandydaci$wiek, list(Numer = kandydaci$komitet), fivenum)
+
+### ### ###
+
+ggplot(kandydaci, aes(x=komitet, y=wiek, fill=komitet))  +
+   geom_boxplot() +
+   ylab("Wiek") +
+   xlab("Komitet") +
+   annotate(geom="text", x = 1, y = 90, hjust=0, size=3,
+   label = komitety ) +
+   guides(fill=FALSE) ;
+
+### ### ### Pomorskie TERYT=22 ### ### ###
+co &lt;- "Wiek kandydatów do sejmików wojewódzkich (2014 / Pomorskie)"
+
+kandydaci &lt;- subset (kandydaci, (woj == "22" ))
+aggregate (kandydaci$wiek, list(Numer = kandydaci$komitet), fivenum)
+
+ggplot(kandydaci, aes(x=komitet, y=wiek, fill=komitet))  +
+   geom_boxplot() +
+   ylab("Wiek") +
+   xlab("Komitet") +
+   annotate(geom="text", x = 1, y = 90, hjust=0, size=3,
+    label = komitety ) +
+   guides(fill=FALSE) ;
+
+sumS &lt;- summary(kandydaci$wiek)
+
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nQ1 = %.1f\nQ3 = %.1f",
+    sumS[["Mean"]], sumS[["Median"]], sumS[["1st Qu."]],  sumS[["3rd Qu."]])
+
+## przywrócenie wartości parametrów
+par(ps=11,cex=1,cex.axis=1,cex.lab=1,cex.main=1.2)
+
+h &lt;- hist(kandydaci$wiek, 
+   breaks=wB, 
+   freq=TRUE,
+   col="orange", main=co, xlab="wiek", ylab="liczba kandydatów", labels=T, xaxt='n')
+   axis(side=1, at=wB)
+   text(80, 40, summary_label, cex = .8, adj=c(0,1))
+
+with (kandydaci, table(komitet))
+
+### ## ###
+kandydaciPL$okrN &lt;- paste (kandydaciPL$woj, "o", kandydaciPL$okr)
+a &lt;- aggregate (kandydaciPL$wiek, list(Numer = kandydaciPL$okrN), fivenum)
+
+h &lt;- hist(a$x[,3], 
+   breaks=wZ, 
+   freq=TRUE,
+   col="orange",
+   main="Mediana wieku kandydatów wg okręgów [Polska 2014]",
+   xlab="wiek", ylab="liczba okręgów", labels=T, xaxt='n')
+   axis(side=1, at=wZ)
+   text(80, 40, summary_label, cex = .8, adj=c(0,1))
+
+## ## ### radni (czyli wybrani)
+radni &lt;- read.csv("radni_ws_2014.csv", sep = ';',
+     header=T, na.string="NA", dec=",");
+
+sumS &lt;- summary(radni$wiek)
+sumV &lt;- sd(radni$wiek)
+
+summary_label &lt;- sprintf ("Śr = %.1f\nMe = %.1f\nQ1 = %.1f\nQ3 = %.1f\nS = %.1f",
+    sumS[["Mean"]], sumS[["Median"]], sumS[["1st Qu."]],  sumS[["3rd Qu."]],  sumV)
+
+h &lt;- hist(radni$wiek,
+   breaks=wB,
+   freq=TRUE,
+   col="orange", 
+   main="Wiek radnych do sejmików wojewódzkich 2014", 
+   ylab="liczba radnych", xlab="wiek", labels=T, xaxt='n')
+   axis(side=1, at=wB)
+   text(80, 80, summary_label, cex = .8, adj=c(0,1))
+ </pre>
+<p/>
+ 
+
+<div>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2014_14.jpg'>
+ <img width='75%' longdesc='[[' alt='' src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2014_14.jpg'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2018_14.jpg'>
+ <img width='75%' longdesc='[[' alt='' src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2018_14.jpg'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2014_26.jpg'>
+ <img width='75%' longdesc='[[' alt='' src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/kandydaci_2014_26.jpg'/>
+ </a>
+ <br/>
+</div>
+
+   
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Nowy router</title>
+<!-- Tags: linksys,asus,inne,upc-->
+</head><body><!-- ##Published : 2018-03-19T02:20:45CEST ##-->
+
+<div style='float : right'>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns0.png'>
+ <img width='220px' longdesc='[[' alt=''   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns0.png'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns1.png'>
+ <img width='220px' longdesc='[[' alt=''   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns1.png'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns2.png'>
+ <img width='220px' longdesc='[[' alt=''   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/asus-ddns2.png'/>
+ </a>
+ <br/>
+ <a href='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/linksysy_allegro_2007.png '>
+ <img width='220px' longdesc='[[' alt=''   src='https://raw.githubusercontent.com/hrpunio/MBlog/master/pic/linksysy_allegro_2007.png '/>
+ </a>
+ <br/>
+
+</div>
+
+<p>Wpis <em>pro memoria</em>, bo ruter (kultowy) WRT54GL,
+który został kupiony w listopadzie 2007r (za 215 PLN) się popsuł.
+Działała bezawaryjnie aż do zeszłego piątku (tj. 9 marca 2018). Dziesięć lat.</p>
+<p>
+Więc router się popsuł w piątek późnym wieczorem (o czym nie
+wiedziałem, bo poszedłem wcześnie spać) a w sobotę od rana walka
+z Internetem, którego nie było. Oczywiście podejrzenia dlaczego nie ma
+obracały się wokół dostawcy to znaczy wokół UPC. Kilka resetów modemu
+nic nie dało, do tego objawy były mocno dziwne.  Ping z PCta 100%
+loss, ping z routera 0% loss.  Ping na router 0% loss.  Coś mi nie
+pasuje (cache?  ale kto <em>catchuje pinga</em>? tyle, że ja się nie
+znam na tym za bardzo/prawie wcale)
+</p>
+
+<p>
+Dzwonię do pomocy technicznej 3x813 (potem 1 -- klient, 2 -- zgłoszenie awarii, 2 -- internet, 9 -- konsultant).
+</p>
+<p>
+Pani inżynier z poziomu #2 wsparcia (poziom #1 mnie połączył po
+usłyszeniu historii o pingach) chce mi wcisnąć ConnectBoksa
+z montażem w poniedziałek, bo <em>pan ma taki stary modem
+i dlatego nie działa.</em>
+-- To państwo zmieniają parametry sieci z piątku na sobotę?
+Pani inżynier się rozłącza <em>abruptly</em>.
+Poza tym nie chcę tego ConnectBoksa,
+bo to urządzenie bardziej prymitywne niż modem + dedykowany
+router. Oczywiście tańsze, bo router już w zestawie, a ja
+musiałem sobie router dokupić -- no ale jak kupiłem, to jakby mi zwisa ta
+konkretna/jedyna zaleta. Niefajnie jest, że oni mogą manipulować tym
+ConnectBoxem zdalnie a modemem jakby nie w szczególności.
+</p>
+<p>
+Ten 1-szy telefon do UPC zżera mi wszystkie pieniądze z karty
+prepaidowej.  Teraz nie mam ani Internetu ani telefonu.
+Do tego dzwonią z roboty czemu mnie nie ma?
+Kurcze pokićkało mi się -- miałem mieć zajęcia.
+Na szczęście nie robią wielkich problemów, ale stress większy...
+</p>
+<p>
+Robię reset routera. Teraz przynajmniej zawsze ping nie łączy
+tj. 100% loss... Coś się klaruje, wygląda na modem
+</p>
+<p>
+Jadę na miasto do 2 różnych serwisów na konsultacje -- oba
+<em>closed</em> (sobota).
+</p>
+
+<p>
+Wracam (rowerem) a pod bramą mijam o milimetry otwierane bez
+upewnienia się drzwi taksówki -- sąsiadka. No punkt dla mnie--tym razem
+nie zaliczyłem drzwi, zagajam o Internet. Dobra moja -- w tej sytuacji
+(że przed chwilą mnie nie trzepła drzwiami)
+pani będzie trudno odmówić a jest zaa ściany. Daje swoje hasło...  No
+to już coś. Mogę działać z jej ConnectBoxem.
+</p>
+<p>
+Doładowuję telefon (Nju).
+Dzwonię 2x do UPC. Teraz jakby ich wina.
+(Inny) Facet mówi, że wyśle technika jeszcze dziś.
+OK, umawiamy się na 18:00. Problem solved.
+</p>
+<p>
+Coś mnie jednak tknęło. Robię reset jeszcze raz.
+Router przestał się świecić.
+Popsuł się na amen.
+Szukam godzinę drugiego--jest wprawdzie inny niż ten którego szukałem
+ale jak ktoś jest 200% bałaganiarzem to i tak się cieszy:-)
+Zresztą to jest dobry router -- Asus RT-N66U aka #MrocznyRycerz (lubię takie
+nazwy -- Dark Night w oryginale, kupiony na OLX jakiś czas temu)
+</p>
+<p>
+Działa.
+</p>
+<p>
+Kolejne 2x telefony do UPC żeby odwołać technika (50 pln za
+nieuzasadnione wezwanie--niby nie majątek, ale nie chcę też tracić czasu).
+Jest 17:00. Dokładną konfigurację/odtworzenie
+tego co było na tym co się zepsuł zostawiam na jutro.
+O tyle jest to nietrywialne, że ten router ma inny firmware oczywiście...
+</p>
+
+<h4>Jutro</h4>
+<p>Się okazało, że w zasadzie nie ma wiele do konfigurowania za wyjątkiem DDNS. W starym
+to działało ciut inaczej niż w nowym.
+Oczywiście mam świadomość że można tę usługę uruchomić na komputerze ale
+ja wolę na routerze.
+</p>
+
+<p>
+Wybieram zatem www.dyndns.org(custom), wpisują swoje serwery
+(oddzielona przecinkami lista). No i tu klops (mały).  Okienko na
+nazwę hosta ma znaczne ograniczenie na liczbę znaków.  Nie mogę wpisać
+wszystkich trzech, bo się nie mieszczą.
+O tyle ten klops jest mały, że
+ten trzeci serwer to taki testowo-tymczasowy jest więc po prostu
+zmieniam mu nazwę na krótszą i gitara.
+</p>
+<p>Teraz trzeba wypełnić tabelkę definiującą przekierowanie portów, co jest
+w miarę oczywiste. I wszystko -- odtworzyłem stan sprzed awarii...
+</p>
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

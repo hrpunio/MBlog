@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Sshfs w MS Windows</title>
+<!-- Tags: win10,mswindows,sshfs,fuse-->
+</head><body><!-- ##Published : 2018-12-03T15:59:35CEST ##-->
+
+<p>Elka przeszła na Win10. Do niczego to jej nie jest potrzebne za
+wyjątkiem sytuacji kiedy pojedzie na konferencję i nie może
+sobie poradzić (na przykład z rzutnikiem). Wtedy jeżeli w ogóle
+jest jakiś konserwator od komputerów (zwany szumnie panem informatykiem),
+to odmawia kooperacji widząc nieznany sobie system. Absolutnie go
+rozumiem zresztą. Zwłaszcza, że odmian Linuksa są dziesiątki...</p>
+
+<p>Anyway, wszystko działa w tym W10,
+za wyjątkiem aplikacji pn
+finanse domowe, którą od lat używamy. Aplikacja jest banalnie prosta
+ale rozproszona -- każdy wpisuje swoje wydatki ze swojego komputera,
+do pliku w uzgodnionym formacie. Plik jest jeden i znajduje się
+na swerwerze plików.
+Skrypt łączy się z serwerem przez <code>fuse</code>/<code>sshfs</code>.
+Plik wydatków
+jest redagowany za pomocą Emacsa. Wpisanie <code>google: sshfs windows</code>
+skutkuje znalezieniem m.in. strony
+<a href='https://nelsonslog.wordpress.com/2017/07/19/windows-sshfs-clients/'>Windows sshfs clients</a>,
+polecającej na pierwszym miejscu <code>SFTPNetDrive</code>.
+Ściągnąłem/zainstalowałem działa, ale nie końca.
+</p>
+
+<p>Zmienia uprawnienia pliku. Uzytkownik windziany, że tak powiem
+zapisuje plik jako read-only dla innych użytkowników. Być może można
+prościej ale ja wymyśliłem
+takie oto obejście: skrypt użytkownika linuksowego
+nie tylko będzie montował stosowny katalog z serwera, ale także
+poprawi uprawnienia. W tym celu niezbędne jest korzystanie
+z programu <code>sudo</code>. Żeby z kolei <code>sudo</code>
+nie pytał się o hasło
+należy go skonfigurować (plik <code>/etc/sudoers</code>), jak poniżej:
+</p>
+
+<pre>
+## instaluję sudo (bo nie było)
+apt-get install sudo
+## dodaję użytkownika tomek do grupy sudo
+usermod -a -G sudo tomek
+### modyfikuję  /etc/sudoers
+## User privilege specification
+#root    ALL=(ALL:ALL) ALL
+### Należy dodać
+#tomek   ALL=(ALL:ALL) NOPASSWD: ALL
+### ORAZ
+## zmodyfikować wiersz dotyczący
+## grupy sudo (bez tego nie działa)
+#%sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+</pre>
+
+<p>Potem modyfikuję skrypt łączący z komputerkiem, dodając na końcu
+następujące polecenie poprawiające uprawnienia do plików:</p>
+<pre>
+ssh tomek@umbriel 'sudo chmod o+w /media/usbstick/Logs/common/ETC/*'
+</pre>
+<p>Teraz działa</p>
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->

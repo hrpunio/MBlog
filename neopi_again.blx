@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='iso-8859-2' ?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title></title>
+<!-- Tags: -->
+</head><body>
+
+<!-- &#x2192; rightarrow, &#x2190 leftarrow, &#8629; downwardarrow, &#8595; downarrow -->
+<!--<div style='float : right'>
+ <a href=''>
+ <img width='180px' longdesc='[[' alt=''
+   src=''/>
+ </a>
+ <br/>
+ <em style='font-size: 80%'>???</em>
+ <br/>
+</div>
+<p><strong>Dopisane 19 marca 2008</strong>:-->
+<p></p>
+<pre>
+sudo apt-get install webfs
+less /etc/webfsd.conf # konfiguracja
+sudo service webfs start
+mkdir -p /var/www/html
+## połączenie http://192.168.1.127:8000/
+## port 8000 jest domyślny, chyba że:
+## web_port=80
+## /etc/init.d/webfs restart
+
+sudo pip install pywws
+Downloading/unpacking pywws
+  Cannot fetch index base URL http://pypi.python.org/simple/
+  Could not find any downloads that satisfy the requirement pywws
+No distributions at all found for pywws
+Storing complete log in /root/.pip/pip.log
+## https://stackoverflow.com/questions/21294997/pip-connection-failure-cannot-fetch-index-base-url-http-pypi-python-org-simple
+sudo pip install -i https://pypi.python.org/simple/ --upgrade pip
+sudo pip install pywws
+
+</pre>
+
+
+</body></html>
+<!--
+Local variables:
+ mode: nxml
+ coding: iso-8859-2
+ LocalWords: Przechlewski
+ ispell-local-dictionary: "polish"
+End:
+-->
